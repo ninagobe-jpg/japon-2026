@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Japón · diciembre 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --indigo:#264348; --indigo-2:#1b3136; --shu:#d9482b; --cream:#fbf7f0; --ink:#1d1b19;
+    --gold:#c9a227; --sakura:#f7d6e0; --matcha:#dcebcb; --aizome:#cfe0ea; --shu-l:#f5c4a6;
+    --kinari:#fff1c1; --ceniza:#e6e3de; --muted:#6b645c; --card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--cream);color:var(--ink);font-family:'Poppins',system-ui,sans-serif}
+  h1,h2,h3,.serif{font-family:'Cormorant Garamond',Georgia,serif}
+  a{color:inherit}
+
+  /* HERO */
+  .hero{position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(27,21,19,.35),rgba(27,21,19,.75)),url('fuji.jpg') center/cover no-repeat;color:#fff;padding:56px 24px 110px;min-height:520px}
+  .mascot{position:absolute;right:24px;top:24px;width:96px;height:96px;border-radius:50%;border:3px solid #f6d9a2;object-fit:cover;box-shadow:0 8px 24px rgba(0,0,0,.35);z-index:2}
+  .mascot-tag{position:absolute;right:24px;top:126px;background:#fff;color:var(--ink);font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px;z-index:2}
+  .hero .sun{position:absolute;left:50%;top:44%;width:260px;height:260px;margin-left:-130px;border-radius:50%;background:radial-gradient(circle,#ffe7b3 0%,#f4a57a 55%,transparent 70%);opacity:.9}
+  .hero svg.fuji{display:none}
+  .hero .kicker{letter-spacing:.35em;font-size:12px;color:#f3d9a4;text-transform:uppercase;position:relative}
+  .hero h1{font-size:clamp(48px,9vw,96px);line-height:.95;margin:14px 0 6px;position:relative;font-weight:500}
+  .hero h1 em{color:#f6d9a2;font-weight:500}
+  .hero p{max-width:560px;position:relative;opacity:.95;font-size:15px;line-height:1.6}
+  .hero .cta{position:relative;margin-top:22px;display:flex;gap:10px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;border:none;cursor:pointer;font-family:inherit;font-weight:600;font-size:14px;text-decoration:none}
+  .btn-light{background:#fff;color:var(--ink)}
+  .btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6)}
+
+  /* STATS */
+  .wrap{max-width:1180px;margin:-70px auto 0;padding:0 18px 60px;position:relative}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--card);border-radius:20px;box-shadow:0 18px 40px rgba(38,67,72,.12);overflow:hidden}
+  .stat{padding:20px;text-align:center;border-right:1px solid #eee}
+  .stat:last-child{border-right:none}
+  .stat b{display:block;font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:600;color:var(--indigo)}
+  .stat span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+
+  /* NAV */
+  .nav{display:flex;gap:8px;margin:28px 0 14px;flex-wrap:wrap;align-items:center}
+  .tab{padding:9px 16px;border-radius:999px;border:1px solid #d9d2c4;background:#fff;cursor:pointer;font-family:inherit;font-size:13px;font-weight:500;text-decoration:none;color:inherit}
+  .tab.on{background:var(--indigo);color:#fff;border-color:var(--indigo)}
+  .daybar{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px}
+  .daybar button{flex:0 0 auto;padding:10px 14px;border-radius:14px;border:1px solid #e3dccd;background:#fff;cursor:pointer;font-family:inherit;text-align:left;min-width:110px}
+  .daybar button b{display:block;font-size:13px}
+  .daybar button small{color:var(--muted);font-size:11px}
+  .daybar button.on{background:var(--shu);border-color:var(--shu);color:#fff}
+  .daybar button.on small{color:#fde5dc}
+
+  /* DAY HEADER */
+  .dayhead{background:linear-gradient(135deg,var(--indigo),var(--indigo-2));color:#fff;border-radius:20px;padding:24px 26px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-end}
+  .dayhead h2{margin:0;font-size:38px;font-weight:500}
+  .dayhead .sub{opacity:.85;font-size:13px;margin-top:6px}
+  .dayhead .meta{text-align:right;font-size:12px;opacity:.9}
+  .dayhead .meta b{display:block;font-size:20px;font-family:'Cormorant Garamond',serif;font-weight:600}
+
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0;align-items:center}
+  .chip{padding:7px 12px;border-radius:999px;font-size:12px;font-weight:600;border:none;cursor:pointer;font-family:inherit}
+  .chip.all{background:#222;color:#fff}
+  .search{flex:1;min-width:180px;padding:10px 14px;border-radius:999px;border:1px solid #d9d2c4;font-family:inherit;font-size:13px;background:#fff}
+  .optbar{display:flex;gap:8px;margin:12px 0;align-items:center;flex-wrap:wrap}
+  .optbar span{font-size:13px;color:var(--muted)}
+
+  /* ITEMS */
+  .timeline{position:relative;padding-left:4px}
+  .item{display:grid;grid-template-columns:86px 1fr;gap:14px;background:#fff;border-radius:16px;padding:14px 16px;margin:10px 0;box-shadow:0 2px 10px rgba(0,0,0,.04);border-left:6px solid #ccc}
+  .item.st-L{border-left-color:#7fb069;background:#f6fbf1}
+  .item.st-R{border-left-color:#4f87a6;background:#f2f8fb}
+  .item.st-P{border-left-color:#e8793f;background:#fff6ef}
+  .item.st-I{border-left-color:#e3b93c;background:#fffdf3}
+  .item.st-T{border-left-color:#9b9790;background:#f7f6f4}
+  .item.done{opacity:.55}
+  .item.done .title{text-decoration:line-through}
+  .time{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--indigo);line-height:1}
+  .time small{display:block;font-family:'Poppins';font-size:11px;color:var(--muted);margin-top:4px;font-weight:500}
+  .title{font-weight:600;font-size:15px;margin:0 0 6px}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+  .pill{font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px}
+  .p-L{background:var(--matcha);color:#355a1e}
+  .p-R{background:var(--aizome);color:#1f4d66}
+  .p-P{background:var(--shu-l);color:#8a3413}
+  .p-I{background:var(--kinari);color:#6b5612}
+  .p-T{background:var(--ceniza);color:#55504a}
+  .resv{font-size:12px;color:#444;background:#f3efe6;padding:4px 8px;border-radius:8px}
+  .note{font-size:13px;color:#4b4640;margin:6px 0 0;line-height:1.5}
+  .curio{margin-top:10px;background:linear-gradient(90deg,#fdf1f4,#fff);border:1px dashed #e7b7c6;border-radius:12px;padding:10px 12px;font-size:13px;color:#5a3340;line-height:1.5}
+  .curio b{color:#b0345b}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+  .mapbtn{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--indigo);color:var(--indigo);padding:6px 12px;border-radius:999px;font-size:12px;font-weight:600;text-decoration:none}
+  .mapbtn:hover{background:var(--indigo);color:#fff}
+  .doneBtn{background:none;border:1px solid #cfc7b7;border-radius:999px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:inherit;color:#555}
+  .doneBtn.on{background:#2e7d32;color:#fff;border-color:#2e7d32}
+
+  .sleep{background:#fff;border-radius:16px;padding:14px 18px;margin-top:14px;box-shadow:0 2px 10px rgba(0,0,0,.04);display:flex;gap:12px;align-items:center;font-size:14px}
+  .sleep b{color:var(--shu)}
+
+  .hrs{font-size:12px;color:var(--muted)}
+  .progress{height:10px;background:#eee;border-radius:999px;overflow:hidden;margin:8px 0 4px}
+  .progress div{height:100%;background:linear-gradient(90deg,var(--shu),var(--gold));transition:width .3s}
+
+  /* PANELS */
+  .panel{background:#fff;border-radius:20px;padding:22px;box-shadow:0 2px 12px rgba(0,0,0,.05);margin-top:14px}
+  .panel h2{margin:0 0 12px;font-size:30px;font-weight:500}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:10px 8px;border-bottom:1px solid #eee;vertical-align:top}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .ok{color:#2e7d32;font-weight:600}
+  .warn{color:#c25a1e;font-weight:600}
+  .foot{text-align:center;color:var(--muted);font-size:12px;padding:30px 10px 50px}
+  .foot a{color:var(--shu)}
+  @media (max-width:720px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .stat:nth-child(2){border-right:none}
+    .item{grid-template-columns:1fr;gap:6px}
+    .dayhead h2{font-size:30px}
+  }
+  .hidden{display:none !important}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <img class="mascot" src="nina-chan.jpg" alt="Nina Chan">
+  <div class="mascot-tag">Nina Chan</div>
+  <div class="sun"></div>
+  <div class="kicker">Tokio · Hakone · Takayama · Kioto · Miyajima · Osaka</div>
+  <h1>Japón,<br><em>día a día</em></h1>
+  <p>20 días, del 5 al 24 de diciembre de 2026. Cada día con horarios, reservas, enlaces a Maps y curiosidades. Marca lo hecho y filtra por estado.</p>
+  <div class="cta">
+    <button class="btn btn-light" onclick="show('dias')">Abrir itinerario →</button>
+    <button class="btn btn-ghost" onclick="show('pendientes')">Qué falta reservar</button>
+  </div>
+  <svg class="fuji" viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,220 L0,180 L520,70 L720,130 L900,100 L1440,180 L1440,220 Z" fill="#264348"/>
+    <path d="M520,70 L470,108 L500,102 L520,112 L545,100 L572,112 L590,94 Z" fill="#fbf7f0" opacity=".9"/>
+  </svg>
+</header>
+
+<main class="wrap">
+  <section class="stats">
+    <div class="stat"><b>20</b><span>Días</span></div>
+    <div class="stat"><b id="stAct">0</b><span>Actividades</span></div>
+    <div class="stat"><b>255</b><span>Km a pie</span></div>
+    <div class="stat"><b id="stPend">0</b><span>Por reservar</span></div>
+  </section>
+
+  <nav class="nav">
+    <button class="tab on" data-v="dias" onclick="show('dias')">Itinerario</button>
+    <button class="tab" data-v="pendientes" onclick="show('pendientes')">Por reservar</button>
+    <button class="tab" data-v="reservas" onclick="show('reservas')">Reservas</button>
+    <button class="tab" data-v="gastos" onclick="show('gastos')">Gastos</button>
+    <a class="tab" href="https://docs.google.com/spreadsheets/d/1KGhURxEkjaJ05N_nlOWbXlZGUh1rLnIZL7snDrX6fkE/edit?usp=sharing" target="_blank" rel="noopener">Abrir hoja de Excel ↗</a>
+  </nav>
+
+  <section id="v-dias">
+    <div class="daybar" id="daybar"></div>
+    <div id="dayView"></div>
+    <div class="progress"><div id="prog" style="width:0%"></div></div>
+    <div class="hrs" id="progTxt" style="margin-bottom:10px"></div>
+  </section>
+
+  <section id="v-pendientes" class="hidden">
+    <div class="panel">
+      <h2>Qué falta reservar</h2>
+      <p class="hrs">Actividades marcadas como <b>Por reservar</b> o <b>Propuesto</b>. Revísalo y decide.</p>
+      <div id="pendList"></div>
+    </div>
+  </section>
+
+  <section id="v-reservas" class="hidden">
+    <div class="panel">
+      <h2>Alojamientos</h2>
+      <table>
+        <tr><th>Alojamiento</th><th>Ciudad</th><th>Fechas</th><th>Precio</th><th>Estado</th></tr>
+        <tr><td>Mi-Hotel Nakano-Shinjuku Direct</td><td>Tokio</td><td>5–12 dic (7 noches)</td><td>478 €</td><td class="ok">Confirmada</td></tr>
+        <tr><td>Sengokuhara Shinanoki Ichinoyu (onsen privado)</td><td>Hakone</td><td>12–13 dic</td><td>206 €</td><td class="ok">Confirmada</td></tr>
+        <tr><td>Oyado Hachibei (ryokan con onsen)</td><td>Takayama</td><td>13–15 dic</td><td>74 €</td><td class="ok">Confirmada</td></tr>
+        <tr><td>Hotel The Point Kyoto Station South</td><td>Kioto</td><td>15–19 dic</td><td>116,24 €</td><td class="ok">Confirmada</td></tr>
+        <tr><td>Sakuraya</td><td>Miyajima</td><td>19–20 dic</td><td>93 €</td><td class="ok">Confirmada</td></tr>
+        <tr><td>Travelodge Honmachi Osaka</td><td>Osaka</td><td>20–24 dic</td><td>194 €</td><td class="ok">Confirmada</td></tr>
+      </table>
+    </div>
+    <div class="panel">
+      <h2>Entradas y actividades</h2>
+      <table>
+        <tr><th>Actividad</th><th>Fecha</th><th>Estado</th></tr>
+        <tr><td>Free tour Shinjuku (Civitatis)</td><td>6 dic</td><td class="ok">Hecho</td></tr>
+        <tr><td>Free tour Ueno (Civitatis)</td><td>7 dic</td><td class="ok">Hecho</td></tr>
+        <tr><td>Kirby Café Tokio</td><td>7 dic</td><td class="ok">Reservado · KT61207181056GD</td></tr>
+        <tr><td>Ghibli Museum</td><td>9 dic</td><td class="ok">Reservado · entrada con hora fija</td></tr>
+        <tr><td>Taller de anillos ENNE</td><td>9 dic</td><td class="ok">Reservado · GYG7VKK3X7A5</td></tr>
+        <tr><td>Capybara Café Harajuku</td><td>11 dic</td><td class="ok">Reservado · NRCVS7</td></tr>
+        <tr><td>Shibuya Sky (franja 16:00–16:30)</td><td>11 dic</td><td class="warn">Por reservar</td></tr>
+        <tr><td>Tour de geishas Gion (Civitatis)</td><td>17 dic</td><td class="ok">Hecho</td></tr>
+        <tr><td>Universal Studios + Express Pass Nintendo World</td><td>22 dic</td><td class="ok">Hecho</td></tr>
+        <tr><td>Bus Nohi Takayama ↔ Shirakawa-go</td><td>14 dic</td><td class="warn">Por reservar · Japan Bus Online</td></tr>
+        <tr><td>Romancecar Shinjuku → Hakone-Yumoto</td><td>12 dic</td><td class="warn">Por reservar · Odakyu</td></tr>
+        <tr><td>Shinkansen Odawara → Nagoya y Wide View Hida</td><td>13 dic</td><td class="warn">Por reservar · SmartEX (Wide View muy limitado)</td></tr>
+        <tr><td>Shinkansen Kioto → Hiroshima y Hiroshima → Osaka</td><td>19–20 dic</td><td class="warn">Por reservar · SmartEX o pase JR</td></tr>
+        <tr><td>Vuelo ZH662 Kansai → Shenzhen</td><td>24 dic</td><td class="ok">Confirmado</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section id="v-gastos" class="hidden">
+    <div class="panel">
+      <h2>Gastos del viaje</h2>
+      <p class="hrs">Importes en euros tal como están en la hoja de Gastos. Revisa el total del hotel Mi-Hotel: en la hoja aparece 494 € y en Reservas 478 €.</p>
+      <table>
+        <tr><th>Concepto</th><th>Pagado por</th><th>Importe</th></tr>
+        <tr><td>Mi-Hotel Nakano-Shinjuku (5–12 dic)</td><td>Javi</td><td>244,00 €</td></tr>
+        <tr><td>Mi-Hotel Nakano-Shinjuku (5–12 dic)</td><td>Nina</td><td>250,00 €</td></tr>
+        <tr><td>Sengokuhara Shinanoki Ichinoyu (12–13 dic)</td><td>Javi</td><td>206,00 €</td></tr>
+        <tr><td>Oyado Hachibei (13–15 dic)</td><td>Nina</td><td>74,00 €</td></tr>
+        <tr><td>Hotel The Point Kyoto Station South (15–19 dic)</td><td>Nina</td><td>116,24 €</td></tr>
+        <tr><td>Sakuraya Miyajima (19–20 dic)</td><td>Javi</td><td>93,00 €</td></tr>
+        <tr><td>Travelodge Honmachi Osaka (20–24 dic)</td><td>Javi</td><td>194,00 €</td></tr>
+        <tr><td>Nintendo World</td><td>Javi</td><td>465,00 €</td></tr>
+        <tr><td>eSIM</td><td>Nina</td><td>44,30 €</td></tr>
+        <tr><td>Seguro de viaje</td><td>Nina</td><td>122,76 €</td></tr>
+        <tr><td>Museo Ghibli</td><td>Javi</td><td>13,00 €</td></tr>
+        <tr><td>Capybara Café</td><td>Nina</td><td>53,00 €</td></tr>
+        <tr><td>Tren Nohi (ida)</td><td>Nina</td><td>33,00 €</td></tr>
+        <tr><td>Tren Nohi (vuelta)</td><td>Javi</td><td>33,00 €</td></tr>
+        <tr><td>Taller de anillos ENNE (9 dic)</td><td>Nina</td><td>31,82 €</td></tr>
+      </table>
+      <div class="sleep" style="margin-top:16px;justify-content:space-around;flex-wrap:wrap">
+        <div><b>Javi</b><br>1.248,00 €</div>
+        <div><b>Nina</b><br>725,12 €</div>
+        <div><b>Total</b><br>1.973,12 €</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    Enlaces de Google Maps = búsquedas del lugar, revisa que abra el sitio correcto. Horarios y precios: verificar siempre.<br>
+    <a href="https://docs.google.com/spreadsheets/d/1KGhURxEkjaJ05N_nlOWbXlZGUh1rLnIZL7snDrX6fkE/edit?usp=sharing" target="_blank" rel="noopener">Hoja de Excel completa</a>
+  </footer>
+</main>
+
+<script>
+const ST = {L:'Libre',R:'Reservado',P:'Por reservar',I:'Propuesto',T:'Traslado'};
+const MAP = q => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
+
+// [hora, título, estado, horas, búsqueda Maps, reserva, nota, curiosidad, opción(A|B)]
+const DAYS = [
+{d:'5 dic', w:'Sáb', t:'Tokio', sleep:'Mi-Hotel Nakano-Shinjuku Direct (Tokio)', items:[
+ ['18:00','Aterrizaje en Narita (ZH651)','R','0','Narita International Airport','Vuelo ZH651','Hora de tu hoja de vuelos'],
+ ['19:00','Inmigración, maletas, Suica/eSIM y billete de tren','T','1,5','Narita International Airport','','Con colas puede alargarse'],
+ ['19:00','Narita Express → Shinjuku → Nakano','T','1,5','Narita Airport Station','Narita Express (JR East)','Verificar horarios'],
+ ['22:00','Check-in Mi-Hotel Nakano (self check-in hasta 00:00)','T','0,5','Mi-Hotel Nakano Shinjuku Tokyo','','Llegar tarde: avisar al hotel'],
+ ['22:30','Si hay energía: Godzilla + neones de Kabukicho y cena','L','1','Godzilla Head Toho Building Shinjuku Tokyo','','Plan B: cena en Nakano y a dormir']
+]},
+{d:'6 dic', w:'Dom', t:'Tokio', sleep:'Mi-Hotel Nakano-Shinjuku Direct (Tokio)', items:[
+ ['08:00','Asakusa con Kiko: Senso-ji, Kaminarimon y santuario','R','4','Senso-ji Tokyo','Guía Kiko','Senso-ji gratis. Opcional crucero por el río Sumida (40 min)','Senso-ji se fundó en el siglo VII y es el templo más antiguo de Tokio. Su puerta Kaminarimon tiene un farol gigante rojo.'],
+ ['12:00','Comida en Asakusa','I','1','Nakamise Street Asakusa Tokyo','','Melonpan Kagetsudo (~¥300), dango (~¥200) o tendon (~¥1.500)','El melonpan no lleva melón: su nombre viene de la corteza con dibujo de rejilla.'],
+ ['13:00','Traslado Asakusa → Nakano','T','0,75','Nakano Station Tokyo','Ginza Line + JR Chuo','~¥350, 35 min','Nakano es la estación clave del JR Chuo; es poco turística y muy local.'],
+ ['13:45','Dejar compras y descanso en Mi-Hotel','I','0,5','Mi-Hotel Nakano Shinjuku Tokyo','','Dejar mochilas y refrescarse','Nakano es un barrio menos caro que Shinjuku y con más ambiente local.'],
+ ['14:15','Nakano Broadway: coleccionismo retro y anime','I','2,5','Nakano Broadway Tokyo','Abre ~12:00','Mandarake, figuras y videojuegos retro. Helado Daily Chico (~¥800)','Nakano Broadway es un centro comercial de coleccionistas de figuras y manga retro.'],
+ ['16:45','Mirador del Gobierno Metropolitano (TMG)','I','1','Tokyo Metropolitan Government Building','Acceso libre','Planta 45 (202 m): gratis hasta las 22:00. Vistas 360°','El mirador tiene 202 m de altura y entrada gratuita; el edificio lo diseñó Kenzo Tange.'],
+ ['17:45','Encuentro del tour en Tochomae','T','0,75','Tochomae Station Tokyo','Civitatis','Llegar 15 min antes'],
+ ['18:30','Tour de Shinjuku en español (Civitatis)','R','2,5','Tochomae Station Tokyo','Civitatis (franja 18:30)','Rascacielos de Shinjuku Oeste, neones y Kabukicho'],
+ ['21:00','Cabeza de Godzilla (Hotel Gracery) + cena en Omoide Yokocho','I','1','Godzilla Head Toho Building Shinjuku Tokyo','','Cena ~¥1.500–2.500','La cabeza de Godzilla asoma sobre el Hotel Gracery, en Kabukicho, y se ilumina de noche.'],
+ ['22:00','Vuelta a Nakano','T','0,5','Mi-Hotel Nakano Shinjuku Tokyo','JR Chuo Line (~¥170)','A descansar']
+]},
+{d:'7 dic', w:'Lun', t:'Tokio', sleep:'Mi-Hotel Nakano-Shinjuku Direct (Tokio)', items:[
+ ['08:30','Traslado Nakano → Ueno + estanque Shinobazu','T','1,25','Ueno Park Tokyo','JR Chuo + Yamanote (~¥210)','Paseo junto al santuario Bentendo'],
+ ['10:00','Free tour Ueno (Civitatis)','R','2,5','Okachimachi Station Tokyo','Civitatis','Punto de encuentro: estación Okachimachi, salida norte. Llegar 15 min antes'],
+ ['12:30','Ameyoko Market: comida callejera','I','1,5','Ameyoko Shopping Street Tokyo','','Brochetas de fruta (¥200), gyozas, ramen (~¥1.000–1.500)'],
+ ['14:00','Akihabara: electrónica y cultura otaku','I','2','Akihabara Tokyo','','Radio Kaikan, Mandarake Complex, retro gaming y gachapon'],
+ ['16:00','Santuario Kanda Myojin','I','1,25','Kanda Myojin Shrine Tokyo','Gratis','Santuario histórico protector de Tokio'],
+ ['17:15','Traslado a Skytree / Solamachi','T','1','Tokyo Skytree Solamachi','Metro Asakusa Line (~¥220)','25 min'],
+ ['18:30','Kirby Café (Solamachi, 4ª planta)','R','1,5','Kirby Cafe Tokyo Solamachi','Reservado · código KT61207181056GD','Menú temático Kirby (~¥3.000–4.500/persona). Verificar hora en la confirmación'],
+ ['20:00','Skytree iluminado y Solamachi','I','1,5','Tokyo Skytree','Solamachi gratis','Torre de 634 m. Mirador Tembo Deck opcional (¥2.700–3.100)'],
+ ['21:30','Vuelta a Nakano','T','1','Mi-Hotel Nakano Shinjuku Tokyo','Metro + JR Chuo (~¥350)','']
+]},
+{d:'8 dic', w:'Mar', t:'Tokio', sleep:'Mi-Hotel Nakano-Shinjuku Direct (Tokio)', items:[
+ ['08:00','Tsukiji Outer Market: desayuno','I','2','Tsukiji Outer Market Tokyo','','Tamagoyaki dulce, brochetas wagyu A5 (~¥1.500), sashimi'],
+ ['10:00','Jardín Hamarikyu','I','1,5','Hamarikyu Gardens Tokyo','Entrada ¥300','Té matcha con wagashi en Nakajima Teahouse (~¥850)'],
+ ['11:30','Ginza: paseo comercial y comida','I','1,5','Ginza Tokyo','Ginza Six, Uniqlo','Papelería Itoya (12 plantas)'],
+ ['13:00','Monorrail Yurikamome a Odaiba','T','0,67','Shimbashi Station Tokyo','Yurikamome (~¥330)','Cruza el Rainbow Bridge sobre la bahía'],
+ ['13:40','Odaiba: Estatua de la Libertad y Gundam 1:1','I','2,5','DiverCity Tokyo Plaza','DiverCity / Decks','Gundam 1:1 en DiverCity (transformación gratis)'],
+ ['16:15','Traslado a Nihonbashi vía Tokyo Tower','T','0,75','Tokyo Tower','Metro Oedo / Asakusa','Opción: Main Deck (¥1.200, hasta 22:30)'],
+ ['17:00','Nihonbashi: puente Km 0 y tiendas centenarias','I','1,5','Nihonbashi Bridge Tokyo','','Tiendas de té, washi y cuchillos. Mitsukoshi (1673)','El puente Nihonbashi marca el kilómetro 0 de las carreteras de Japón.'],
+ ['18:30','Cena en Nihonbashi (idea de Javi)','I','2','Nihonbashi restaurants Tokyo','','Tempura Kaneko Hannosuke (~¥1.200–1.800) o unagi centenario'],
+ ['20:30','Vuelta a Nakano','T','0,75','Mi-Hotel Nakano Shinjuku Tokyo','Metro + JR (~¥250)','Regreso tras día completo']
+]},
+{d:'9 dic', w:'Mié', t:'Tokio', sleep:'Mi-Hotel Nakano-Shinjuku Direct (Tokio)', items:[
+ ['08:30','Traslado Nakano → Kichijoji','T','1','Kichijoji Station Tokyo','JR Chuo (~¥180, 15 min)',''],
+ ['09:30','Parque Inokashira y santuario Benzaiten','I','1,25','Inokashira Park Tokyo','Gratis','Santuario rojo junto al lago antes del museo'],
+ ['11:00','Museo Ghibli (Mitaka)','R','1,5','Ghibli Museum Mitaka','Entrada con hora fija (Lawson / web oficial)','Robot soldado de Laputa en la azotea. Dentro no se puede fotografiar','El Museo Ghibli no permite fotos en sus salas; el robot de la azotea es su símbolo más famoso.'],
+ ['12:30','Almuerzo en Harmonica Yokocho','I','1,5','Harmonica Yokocho Kichijoji','','Croquetas de carne Satou (~¥250)'],
+ ['14:00','Petit Mura y Sunroad','I','1,25','Petit Mura Kichijoji','petitmura.com','Aldea de cuento con tiendas de gatos'],
+ ['15:15','Suginami Animation Museum o Koenji vintage','I','1','Suginami Animation Museum','Gratis','Historia del anime'],
+ ['16:15','Traslado a Shinjuku','T','0,5','Shinjuku Station Tokyo','JR Chuo (~¥180)','Llegar 15 min antes del taller'],
+ ['17:00','Taller de anillos de plata (ENNE Ring Shinjuku)','R','1','ENNE Ring Shinjuku Tokyo','Código GYG7VKK3X7A5','Modelado y forja de anillos en pareja'],
+ ['18:00','Traslado Shinjuku → Nakano','T','0,5','Mi-Hotel Nakano Shinjuku Tokyo','JR Chuo (~¥170)','Dejar los anillos en el hotel'],
+ ['18:30','Ramen en Nakano (Aoba o Toride)','I','2,5','Chuka Soba Aoba Nakano','','Caldo de cerdo y pescado (~¥900)']
+]},
+{d:'10 dic', w:'Jue', t:'Tokio · Opción A/B', sleep:'Mi-Hotel Nakano-Shinjuku Direct (Tokio)', hasOpts:true, items:[
+ ['08:30','Traslado Nakano → Ikebukuro','T','1','Ikebukuro Station Tokyo','JR Yamanote (~¥180)','','','A'],
+ ['09:30','Pokémon Center Mega Tokyo + Sunshine City','I','3','Pokemon Center Mega Tokyo Ikebukuro','Sunshine City','Pikachu Sweets, One Piece Store, mirador Tenbou-Park (¥700–900)','El Pokémon Center de Sunshine City es el más grande de Tokio.','A'],
+ ['12:30','Comida: Mutekiya Ramen','I','1,25','Mutekiya Ramen Ikebukuro','','Tonkotsu espeso con chashu gigante (~¥1.200–1.500)','','A'],
+ ['13:45','Yanaka Ginza y atardecer','I','2,75','Yanaka Ginza Tokyo','','Escaleras Yuyake Dandan, croquetas menchi-katsu (¥250), templo Tennoji','Yanaka se salvó del gran incendio de Tokio y conserva el ambiente de barrio antiguo.','A'],
+ ['16:30','Tokyo Station: Character Street y Palacio Imperial','I','2','Tokyo Character Street','Exterior del Palacio gratis','Alternativa: Daikanyama/Nakameguro o mirador TMG','','A'],
+ ['18:30','Cena en Tokyo Ramen Street','I','2','Tokyo Ramen Street','','Tsukemen Rokurinsha (~¥1.050)','','A'],
+ ['20:30','Vuelta a Nakano','T','0,75','Mi-Hotel Nakano Shinjuku Tokyo','JR Chuo Rapid (~¥230)','','','A'],
+ ['08:30','Salida a Kamakura desde Nakano','T','1','Kamakura Station','JR Yokosuka (verificar)','Revisa horario de tren y tiempos','','B'],
+ ['09:30','Kotoku-in (Gran Buda de bronce)','I','1','Kotoku-in Kamakura','','Unos 15 min a pie de la estación','El Gran Buda de Kamakura es de bronce y mide unos 11 m.','B'],
+ ['10:30','Hase-dera (jardines y vista al mar)','I','1','Hase-dera Kamakura','','Verificar horario y entrada','','B'],
+ ['11:30','Calle Komachi-dori y comida','I','1','Komachi-dori Kamakura','','Pastelerías y puestos de comida','','B'],
+ ['12:30','Enoden hasta Enoshima','T','0,67','Enoshima Station','Enoden','Tren costero, 20–30 min','','B'],
+ ['13:10','Isla de Enoshima (santuario y faro)','I','1,8','Enoshima Island','','Subida a pie de unos 30 min','','B'],
+ ['15:00','Enoshima → Tokio','T','1,5','Tokyo Station','','Verificar tren directo a Shinjuku','','B'],
+ ['16:30','Vuelta a Nakano y descanso','L','1,5','Mi-Hotel Nakano Shinjuku Tokyo','','','','B'],
+ ['18:00','Cena en Nakano y paseo','L','2','Nakano Broadway Tokyo','','Sin reserva','','B']
+]},
+{d:'11 dic', w:'Vie', t:'Tokio', sleep:'Mi-Hotel Nakano-Shinjuku Direct (Tokio)', items:[
+ ['08:30','Santuario Gotokuji: cuna del maneki-neko','I','1,5','Gotokuji Temple Tokyo','Gratis (06:00–17:00)','Miles de figuras blancas de maneki-neko','El maneki-neko (gato de la suerte) tiene su origen en este templo según la tradición.'],
+ ['10:00','Shimokitazawa: vintage y vinilos','I','2','Shimokitazawa Tokyo','Calles peatonales','Tiendas de segunda mano y café de especialidad'],
+ ['12:00','Harajuku: Takeshita Street y street food','I','1,5','Takeshita Street Harajuku Tokyo','','Marion Crepes (~¥600), algodón Totti Candy'],
+ ['13:30','Santuario Meiji Jingu y Parque Yoyogi','I','1','Meiji Jingu Tokyo','Gratis (cierra al atardecer)','Gran torii de cedro y bosque sagrado de 70 ha','El bosque de Meiji Jingu se plantó con más de 100.000 árboles donados.'],
+ ['14:30','Capybara Café (Harajuku)','R','1','Capybara Cafe Takeshita Street Tokyo','Reservado · ID NRCVS7','Acaricia y alimenta capibaras (~¥2.500/persona)','Los capibaras son los roedores más grandes del mundo.'],
+ ['15:30','Cat Street a pie hasta Shibuya','T','0,5','Cat Street Shibuya Tokyo','Paseo','15–20 min con tiendas de diseñadores'],
+ ['16:00','Shibuya Sky al atardecer','P','1,5','Shibuya Sky Tokyo','Web oficial · franja 16:00–16:30 (reservar ya)','Mirador a 229 m. Entrada ~¥2.000'],
+ ['17:30','Estatua de Hachiko + cruce de Shibuya','I','2','Shibuya Crossing Tokyo','','Cruce peatonal bajo los paneles de neón','Hachiko esperó a su dueño en la estación durante años tras su muerte.'],
+ ['19:30','Cena en Nonbei Yokocho','I','2','Nonbei Yokocho Shibuya','','Yakitori y cerveza (~¥2.500–3.500)'],
+ ['21:30','Vuelta a Nakano','T','0,75','Mi-Hotel Nakano Shinjuku Tokyo','JR Yamanote + Chuo (~¥210)','']
+]},
+{d:'12 dic', w:'Sáb', t:'Tokio → Hakone', sleep:'Sengokuhara Shinanoki Ichinoyu (Hakone)', items:[
+ ['08:00','Check-out Mi-Hotel y envío de maleta (takkyubin)','T','1,5','Mi-Hotel Nakano Shinjuku Tokyo','Yamato Takkyubin','Entrega en Kioto a partir de las 14:00 del 15/12'],
+ ['09:30','Toyokawa Inari Tokyo Betsuin (zorros)','I','1,5','Toyokawa Inari Tokyo Betsuin','','Verificar horario'],
+ ['11:00','Traslado a Shinjuku y comida rápida','T','1,5','Shinjuku Station Tokyo','',''],
+ ['12:30','Romancecar Shinjuku → Hakone-Yumoto','P','2','Shinjuku Station Tokyo','Odakyu Romancecar · reservar ~12 nov','Hakone Free Pass. ~1h30 de trayecto'],
+ ['14:30','Bus a Sengokuhara','T','1','Sengokuhara Hakone','Hakone Free Pass','Check-in 15:00–18:00'],
+ ['15:30','Ryokan Sengokuhara Shinanoki Ichinoyu','R','3,5','Sengokuhara Shinanoki Ichinoyu Hakone','Confirmada','Onsen privado (apto con tatuajes). Cena kaiseki incluida','Los ryokan con onsen privado permiten usar el baño en exclusiva con reserva.']
+]},
+{d:'13 dic', w:'Dom', t:'Hakone → Takayama', sleep:'Oyado Hachibei (Takayama)', items:[
+ ['08:00','Desayuno y último onsen privado; check-out 10:00','L','2','Sengokuhara Shinanoki Ichinoyu Hakone','',''],
+ ['10:00','Bus/tren a Odawara','T','1,5','Odawara Station','',''],
+ ['11:30','Shinkansen Odawara → Nagoya','P','2','Odawara Station','SmartEX · reservar ~13 nov','~1h10–1h15'],
+ ['14:00','Wide View Hida: Nagoya → Takayama','P','2,5','Nagoya Station','SmartEX · plazas muy limitadas','~2h20. Llegar antes de 17:00 para el shuttle del ryokan','El tren Wide View Hida tiene ventanales panorámicos por el paisaje de montaña.'],
+ ['16:30','Shuttle y check-in Oyado Hachibei','T','1,5','Oyado Hachibei Takayama','Shuttle gratis 15:00–17:00','Avisar al llegar a la estación'],
+ ['18:00','Cena en ryokan, onsen y Sanmachi Suji de noche','L','3','Sanmachi Suji Takayama','','Confirmar política de tatuajes','Sanmachi Suji conserva calles del periodo Edo, con casas de madera.']
+]},
+{d:'14 dic', w:'Lun', t:'Takayama', sleep:'Oyado Hachibei (Takayama)', items:[
+ ['07:30','Mercado matutino de Miyagawa','I','1','Miyagawa Morning Market Takayama','','Manzanas de Hida y dulces tradicionales (07:00–12:00)'],
+ ['09:00','Bus Nohi Takayama → Shirakawa-go','P','1','Takayama Bus Terminal','Japan Bus Online · reservar ~14 nov','Trayecto ~50 min'],
+ ['10:00','Shirakawa-go: aldea, mirador y comida','I','4','Ogimachi Shirakawa-go','','Mirador Shiroyama y casa gassho (¥300–400)','Shirakawa-go es Patrimonio UNESCO por sus casas gassho, de techo de paja en forma de manos juntas.'],
+ ['14:00','Bus de vuelta a Takayama','P','1','Shirakawa-go Bus Stop','Japan Bus Online (mismo billete)','Trayecto ~50 min'],
+ ['15:00','Sanmachi Suji y tiendas de sake','I','2','Sanmachi Suji Takayama','','Takayama Jinya (¥440, hasta 17:00)'],
+ ['17:00','Hida beef y onsen del ryokan','L','3','Takayama Hida beef restaurant','','Cena de wagyu A5 de Hida']
+]},
+{d:'15 dic', w:'Mar', t:'Takayama → Kioto', sleep:'Hotel The Point Kyoto Station South', items:[
+ ['08:00','Check-out Oyado Hachibei','L','1,5','Oyado Hachibei Takayama','','Check-out hasta 10:00'],
+ ['09:30','Limited Express Hida: Takayama → Kanazawa','P','2','Kanazawa Station','JR Hida · verificar JR Pass','~2h. Reservar asiento'],
+ ['11:30','Castillo de Kanazawa','I','0,8','Kanazawa Castle','Recinto exterior gratis','Puertas Hishi Yagura y murallas restauradas'],
+ ['12:30','Comida en Omicho Market','I','1','Omicho Market Kanazawa','','Kaisen-don y marisco fresco'],
+ ['13:40','Jardín Kenroku-en','I','1,3','Kenroku-en Kanazawa','Entrada ¥320 (07:00–17:00)','Pinos con yukitsuri en invierno','Kenroku-en es uno de los tres grandes jardines de Japón.'],
+ ['15:10','Nagamachi: barrio samurái y Casa Nomura','I','0,8','Nagamachi Samurai District Kanazawa','Casa Nomura ¥550','Muros de barro tradicionales'],
+ ['16:15','Higashi Chaya (casas de té)','I','1,25','Higashi Chaya District Kanazawa','','Casas de té de madera, matcha y dulces','Higashi Chaya fue un distrito de geishas: sus casas de té conservan la arquitectura de madera.'],
+ ['17:30','Traslado a la estación de Kanazawa','T','0,5','Kanazawa Station','','A pie o taxi'],
+ ['18:00','Kanazawa → Kioto (Thunderbird / Limited Express)','P','2,5','Kyoto Station','JR Thunderbird · reserva recomendada','~2h15–2h30'],
+ ['20:30','Check-in The Point Kyoto y recoger maleta','T','1','Hotel The Point Kyoto Station South','Confirmada','Avisar de la llegada tarde'],
+ ['21:30','Cena en Kyoto Station','L','1','Kyoto Station restaurants','','Sin reserva']
+]},
+{d:'16 dic', w:'Mié', t:'Kioto · Nara', sleep:'Hotel The Point Kyoto Station South', items:[
+ ['07:00','Fushimi Inari (zorros)','I','2,5','Fushimi Inari Taisha Kyoto','Gratis, 24h','Miles de toriis y mirador Yotsutsuji','Fushimi Inari tiene miles de toriis donados por empresas y particulares.'],
+ ['09:30','Tren Kintetsu Kioto → Nara','T','1','Kintetsu Kyoto Station','Kintetsu (~¥640)','45 min'],
+ ['10:30','Nara: Todai-ji, ciervos y Kasuga Taisha','I','5','Todai-ji Nara','Todai-ji ¥600 (08:00–17:00)','Gran Buda de 15 m. Galletas para ciervos (¥200)','Los ciervos de Nara son considerados mensajeros de los dioses en el sintoísmo.'],
+ ['15:30','Vuelta a Kioto','T','1,5','Kintetsu Nara Station','Kintetsu (~¥640)',''],
+ ['17:00','Pontocho y río Kamo: cena','I','3','Pontocho Kyoto','','Yakitori, izakaya o wagyu','Pontocho es un callejón de farolillos rojos junto al río Kamo.']
+]},
+{d:'17 dic', w:'Jue', t:'Kioto', sleep:'Hotel The Point Kyoto Station South', items:[
+ ['08:00','Sanjusangendo','I','1','Sanjusangendo Kyoto','¥600 (08:00–17:00)','1.001 estatuas de Kannon','Sanjusangendo tiene 1.001 estatuas de Kannon, cada una con 40 brazos.'],
+ ['09:15','Kiyomizu-dera','I','1,5','Kiyomizu-dera Kyoto','¥400 (06:00–18:00)','Terraza de madera con vistas a Kioto'],
+ ['10:45','Higashiyama: Sannenzaka, Ninenzaka y Yasaka','I','1,75','Sannenzaka Kyoto','','Yasaka Pagoda y parque Maruyama'],
+ ['12:30','Mercado Nishiki + comer','I','1,5','Nishiki Market Kyoto','','Brochetas de marisco, tempura, matcha (~¥1.500–2.500)'],
+ ['14:00','Ginkaku-ji y Camino del Filósofo','I','1','Ginkaku-ji Kyoto','¥500 (08:30–17:00)','Pabellón de Plata y jardín de arena'],
+ ['15:00','Gion y Pontocho libre','L','2,5','Gion Kyoto','','Callejones Hanami-koji y Shirakawa'],
+ ['17:30','Tour de geishas en Gion (Civitatis)','R','2','Gion Kyoto','Civitatis · punto de encuentro en Maps','Verificar duración'],
+ ['19:30','Cena en Kichikichi (omurice)','P','1,5','Kichikichi Kyoto','Reserva web previa obligatoria','Omurice show del chef Motokichi','Kichikichi es famoso por su omurice presentado con un espectáculo.']
+]},
+{d:'18 dic', w:'Vie', t:'Kioto', sleep:'Hotel The Point Kyoto Station South', items:[
+ ['08:30','Kinkaku-ji + Ryoan-ji','I','2','Kinkaku-ji Kyoto','¥500 + ¥500','Pabellón Dorado y jardín zen de piedras','El jardín de Ryoan-ji tiene 15 piedras y se ve desde un solo punto.'],
+ ['10:30','Ninna-ji o Daitoku-ji','L','1,5','Ninna-ji Kyoto','','Recinto imperial y pagoda'],
+ ['12:00','Traslado a Arashiyama','T','1','Arashiyama Kyoto','Bus 204/205 o taxi','~20–25 min'],
+ ['13:00','Arashiyama: bambú, Tenryu-ji, Daikaku-ji, Otagi y Togetsukyo','I','3,5','Arashiyama Bamboo Grove Kyoto','Tenryu-ji ¥500 · Daikaku-ji ¥500','Estanque Osawa-no-ike. Sin parque de monos','El bosque de bambú de Arashiyama suena con el viento: es uno de los paisajes más fotografiados de Kioto.'],
+ ['16:30','Vuelta a Kioto y cena','L','2','Kyoto Station','','Tren Randen / San-in Line']
+]},
+{d:'19 dic', w:'Sáb', t:'Kioto → Miyajima', sleep:'Sakuraya (Miyajima)', items:[
+ ['08:30','Toji (pagoda de cinco pisos)','I','1,5','Toji Temple Kyoto','¥500–600','A 15 min a pie del hotel'],
+ ['10:00','Check-out (hasta 11:00)','T','1','Hotel The Point Kyoto Station South','',''],
+ ['11:30','Shinkansen Kioto → Hiroshima','P','1,75','Kyoto Station','SmartEX · JR Kansai-Hiroshima Area Pass','~1h40. Reservar o cubierto por el pase'],
+ ['13:15','Tren local y ferry a Miyajima','T','1,25','Miyajimaguchi Station','JR Sanyo + ferry JR','Tren ¥420 (cubierto por pase)'],
+ ['15:00','Check-in Sakuraya (15:00–22:00)','R','0','Sakuraya Miyajima','Confirmada',''],
+ ['15:00','Itsukushima y torii al atardecer','I','2','Itsukushima Shrine Miyajima','Entrada ¥300 (06:30–17:30)','Torii flotante según la marea. Pabellón Senjokaku y pagoda','El torii de Itsukushima parece flotar cuando sube la marea.'],
+ ['17:00','Omotesando, cena y torii iluminado','L','4','Omotesando Miyajima','','Ostras a la parrilla y momiji manju (~¥150–300)']
+]},
+{d:'20 dic', w:'Dom', t:'Miyajima → Hiroshima → Osaka', sleep:'Travelodge Honmachi Osaka', items:[
+ ['06:30','Amanecer en Itsukushima','L','2','Itsukushima Shrine Miyajima','','Templo Daisho-in (gratis) y bosque Momijidani'],
+ ['08:30','Ferry y tren a Hiroshima','T','1,5','Miyajimaguchi Station','JR Kansai-Hiroshima Area Pass','Consigna en estación Hiroshima'],
+ ['10:00','Okonomimura: okonomiyaki estilo Hiroshima','I','2','Okonomimura Hiroshima','','~¥1.000–1.500','El okonomiyaki de Hiroshima lleva capas de col, fideos y salsa, a diferencia del de Osaka.'],
+ ['12:00','Parque y Cúpula de la Bomba Atómica','I','2,5','Hiroshima Peace Memorial Park','Museo ¥200 (08:30–18:00)','Museo Conmemorativo de la Paz','La Cúpula es uno de los pocos edificios que quedaron en pie tras la bomba de 1945.'],
+ ['14:30','Shinkansen a Shin-Osaka y metro al hotel','T','2,5','Shin-Osaka Station','SmartEX · pase JR','~1h30 + metro Midosuji (¥280)'],
+ ['17:00','Check-in y ruta nocturna: Shinsaibashi-suji, Dotonbori y Namba Yasaka','L','3,5','Dotonbori Osaka','Namba Yasaka Jinja gratis (24h)','Cena en Dotonbori (cartel de Glico)','Namba Yasaka tiene una cabeza de león gigante iluminada de noche.']
+]},
+{d:'21 dic', w:'Lun', t:'Osaka → Kioto → Osaka', sleep:'Travelodge Honmachi Osaka', items:[
+ ['08:30','Tren JR Special Rapid Osaka → Kioto','T','1,5','Osaka Station','JR Special Rapid (¥580)','Unos 30 min'],
+ ['10:00','Mercado Shimai Kobo en Toji','I','2','Toji Temple Kyoto','Entrada pagoda ¥500–600','Solo el 21 de diciembre. Llegar temprano','Este mercado se celebra el día 21 de cada mes; en diciembre es el último del año.'],
+ ['12:30','Comida en Kyoto Station','I','1','Kyoto Station','','Sin reserva'],
+ ['13:30','Higashi Honganji','I','0,75','Higashi Honganji Kyoto','Gratis (05:50–17:00)','Pabellón Goei-do de madera'],
+ ['14:15','Shosei-en (jardín zen)','I','0,5','Shosei-en Kyoto','Donación ¥500','Estanque zen con puentes de madera'],
+ ['15:15','Tren JR Special Rapid a Osaka','T','0,5','Kyoto Station','JR Special Rapid (¥580)',''],
+ ['16:30','Descanso en el hotel','L','1','Travelodge Honmachi Osaka','',''],
+ ['17:30','Cena en Dotonbori','L','1,5','Dotonbori Osaka','','Takoyaki en Kukuru o kushikatsu Daruma'],
+ ['19:30','Crucero Maravilla de Osaka (ruta Dotonbori)','P','0,5','Wonder Cruise Dotonbori Osaka','Klook 11,99 € · presentar voucher','20 min por el río bajo el cartel de Glico']
+]},
+{d:'22 dic', w:'Mar', t:'Osaka', sleep:'Travelodge Honmachi Osaka', items:[
+ ['08:00','Universal Studios Japan: Nintendo World','R','12','Universal Studios Japan Osaka','Entradas + Express Pass comprados','Mario Kart: Koopa’s Challenge y Harry Potter','Super Nintendo World abrió en 2021 dentro de Universal Studios Japan.']
+]},
+{d:'23 dic', w:'Mié', t:'Osaka', sleep:'Travelodge Honmachi Osaka', items:[
+ ['08:15','Metro Honmachi → Morinomiya','T','0,35','Morinomiya Station Osaka','Metro ¥280 (20 min)','+10 min a pie al castillo'],
+ ['09:00','Castillo de Osaka','I','1,25','Osaka Castle','¥1.200 (09:00–17:00)','Última entrada 16:30','El castillo original lo construyó Toyotomi Hideyoshi a finales del siglo XVI.'],
+ ['10:30','Templo Shitennoji','I','0,75','Shitennoji Temple Osaka','¥300 (08:30–16:30)','Fundado en 593','Shitennoji es uno de los templos budistas más antiguos de Japón, fundado en 593.'],
+ ['11:20','Templo Isshinji','I','0,7','Isshinji Temple Osaka','Gratis (hasta 17:00)','Estatuas de Buda hechas con cenizas','Isshinji tiene estatuas de Buda esculpidas con cenizas de difuntos.'],
+ ['12:15','Shinsekai y Chao Chao Gyoza','I','3,25','Shinsekai Osaka','Chao Chao Gyoza','Torre Tsutenkaku (exterior)'],
+ ['15:30','Paseo hacia Tennoji','L','1,5','Tennoji Park Osaka','','Café, descanso o centros comerciales'],
+ ['17:00','Mirador Abeno Harukas 300','I','2','Abeno Harukas Osaka','¥1.500 (09:00–22:00)','Pisos 58–60, atardecer iluminado','Abeno Harukas es el rascacielos más alto de Japón.'],
+ ['19:30','Cena libre en Dotonbori o Kuromon','L','2','Kuromon Ichiba Market Osaka','','Despedida de Osaka'],
+ ['OPC','Taller de palillos en Namba (opcional)','P','3','Chopstick Making Workshop Osaka Namba','Klook 5,99 € (hasta 3 h)','Palillos con grabado propio']
+]},
+{d:'24 dic', w:'Jue', t:'Osaka → vuelta', sleep:'Vuelo ZH662 desde Kansai', items:[
+ ['08:00','Desayuno y check-out (hasta 10:00)','L','2','Travelodge Honmachi Osaka','',''],
+ ['11:15','Tren Haruka a Kansai Airport','P','1,5','Kansai International Airport','Buscar reserva Haruka','Llegar a KIX antes de las 13:00'],
+ ['15:05','Vuelo ZH662 desde KIX','R','0','Kansai International Airport','Confirmado','Hora de tu hoja de vuelos']
+]}
+];
+
+// ---------- estado ----------
+let cur = 0, opt = 'A', filt = 'ALL', q = '';
+let done = {};
+try{ done = JSON.parse(localStorage.getItem('japon-done')||'{}'); }catch(e){ done = {}; }
+const saveDone = () => { try{ localStorage.setItem('japon-done', JSON.stringify(done)); }catch(e){} };
+const key = (d,i) => d+'-'+i;
+
+function esc(s){ return String(s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function show(v){
+  ['dias','pendientes','reservas','gastos'].forEach(x => document.getElementById('v-'+x).classList.toggle('hidden', x!==v));
+  document.querySelectorAll('.nav .tab[data-v]').forEach(b => b.classList.toggle('on', b.dataset.v===v));
+  if(v==='pendientes') renderPend();
+  window.scrollTo({top: document.getElementById('v-'+v).offsetTop - 10, behavior:'smooth'});
+}
+
+function renderBar(){
+  document.getElementById('daybar').innerHTML = DAYS.map((d,i) =>
+    `<button class="${i===cur?'on':''}" onclick="go(${i})"><b>${d.w} ${d.d}</b><small>${d.t}</small></button>`).join('');
+}
+function go(i){ cur = i; renderBar(); renderDay(); }
+
+function itemsFor(d){
+  return d.items.map((it,i)=>({it,i}))
+    .filter(({it})=> !d.hasOpts || !it[8] || it[8]===opt)
+    .sort((a,b)=> (a.it[0]||'').localeCompare(b.it[0]||''));
+}
+
+function renderDay(){
+  const d = DAYS[cur];
+  const all = itemsFor(d);
+  const list = all.filter(({it}) => {
+    if(filt!=='ALL' && it[2]!==filt) return false;
+    if(q && !(it[1]+' '+(it[5]||'')+' '+(it[6]||'')).toLowerCase().includes(q.toLowerCase())) return false;
+    return true;
+  });
+  const hoursSum = all.reduce((s,{it})=> s + (parseFloat(String(it[3]||'0').replace(',','.'))||0), 0);
+  let opts = '';
+  if(d.hasOpts){
+    opts = `<div class="optbar"><span>Día 10 · elige:</span>
+      <button class="chip ${opt==='A'?'all':''}" style="${opt==='A'?'':'background:#eee;color:#333'}" onclick="setOpt('A')">Opción A · Ikebukuro & Yanaka</button>
+      <button class="chip ${opt==='B'?'all':''}" style="${opt==='B'?'':'background:#eee;color:#333'}" onclick="setOpt('B')">Opción B · Kamakura & Enoshima</button></div>`;
+  }
+  const filters = ['ALL','L','R','P','I','T'].map(s =>
+    `<button class="chip ${filt===s?'all':''}" style="${filt===s?'':'background:#f1ece1;color:#333'}" onclick="setFilt('${s}')">${s==='ALL'?'Todo':ST[s]}</button>`).join('');
+  const items = list.map(({it,i}) => {
+    const k = key(cur,i), isDone = !!done[k];
+    const [h,t,s,hrs,mq,res,note,curio] = it;
+    return `<article class="item st-${s} ${isDone?'done':''}">
+      <div class="time">${esc(h)}<small>${esc(hrs?hrs.replace('.',',')+' h':'')}</small></div>
+      <div>
+        <p class="title">${esc(t)}</p>
+        <div class="row"><span class="pill p-${s}">${ST[s]}</span>${res?`<span class="resv">${esc(res)}</span>`:''}</div>
+        ${note?`<p class="note">${esc(note)}</p>`:''}
+        ${curio?`<div class="curio"><b>💡 Curiosidad:</b> ${esc(curio)}</div>`:''}
+        <div class="actions">
+          ${mq?`<a class="mapbtn" href="${MAP(mq)}" target="_blank" rel="noopener">📍 Ver en Maps</a>`:''}
+          <button class="doneBtn ${isDone?'on':''}" onclick="toggleDone(${cur},${i})">${isDone?'✓ Hecho':'Marcar hecho'}</button>
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+  document.getElementById('dayView').innerHTML = `
+    <div class="dayhead">
+      <div><h2>${d.w} ${d.d} de diciembre</h2><div class="sub">${esc(d.t)}</div></div>
+      <div class="meta"><b>${hoursSum.toFixed(1).replace('.',',')} h</b>${all.length} actividades</div>
+    </div>
+    <div class="sleep">🛏️ <div><b>Dormimos en:</b> ${esc(d.sleep)}</div></div>
+    ${opts}
+    <div class="filters"><input class="search" placeholder="Buscar actividad, reserva o nota…" value="${esc(q)}" oninput="setQ(this.value)">${filters}</div>
+    <div class="timeline">${items || '<p class="hrs">Nada que mostrar con este filtro.</p>'}</div>`;
+  updateStats();
+}
+
+function setOpt(o){ opt = o; renderDay(); }
+function setFilt(f){ filt = f; renderDay(); }
+function setQ(v){ q = v; renderDay(); }
+function toggleDone(d,i){ done[key(d,i)] = !done[key(d,i)]; saveDone(); renderDay(); }
+
+function updateStats(){
+  let all = 0, pend = 0, dn = 0;
+  DAYS.forEach((d,di) => itemsFor(d).forEach(({it,i}) => {
+    all++;
+    if(it[2]==='P') pend++;
+    if(done[key(di,i)]) dn++;
+  }));
+  document.getElementById('stAct').textContent = all;
+  document.getElementById('stPend').textContent = pend;
+  const pct = all ? Math.round(dn/all*100) : 0;
+  document.getElementById('prog').style.width = pct+'%';
+  document.getElementById('progTxt').textContent = `Progreso: ${dn} de ${all} actividades marcadas como hechas (${pct}%).`;
+}
+
+function renderPend(){
+  const rows = [];
+  DAYS.forEach((d,di) => itemsFor(d).forEach(({it}) => {
+    if(it[2]==='P' || it[2]==='I') rows.push(`<tr>
+      <td>${d.w} ${d.d}</td><td>${esc(it[0])}</td><td>${esc(it[1])}</td>
+      <td><span class="pill p-${it[2]}">${ST[it[2]]}</span></td>
+      <td>${esc(it[5]||'')}</td>
+      <td>${it[4]?`<a class="mapbtn" href="${MAP(it[4])}" target="_blank" rel="noopener">📍 Maps</a>`:''}</td>
+      <td><a href="#" onclick="go(${di});show('dias');return false;">Ir al día →</a></td></tr>`);
+  }));
+  document.getElementById('pendList').innerHTML = `<table>
+    <tr><th>Día</th><th>Hora</th><th>Actividad</th><th>Estado</th><th>Reserva</th><th>Maps</th><th></th></tr>${rows.join('')}</table>`;
+}
+
+renderBar(); renderDay();
+</script>
+</body>
+</html>
