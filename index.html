@@ -145,14 +145,22 @@
   .wel h3{font-family:'Cormorant Garamond',serif;font-size:28px;margin:0 0 8px;font-weight:500}
   .wel ul{padding-left:18px;font-size:14px;line-height:1.6}
   .wel button{margin-top:14px;background:var(--indigo);color:#fff;border:none;padding:10px 18px;border-radius:999px;font-family:inherit;font-weight:600;cursor:pointer}
+
+  .dayimg{height:200px;border-radius:20px;background-size:cover;background-position:center;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,.12)}
+  .hcard{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#fff;border-radius:16px;padding:14px 16px;margin:10px 0;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+  .hright{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .rrow{display:flex;justify-content:space-between;gap:12px;align-items:center;background:#fff;border-radius:14px;padding:12px 14px;margin:8px 0;border-left:6px solid #ccc;flex-wrap:wrap}
+  .rrow.st-L{border-left-color:#7fb069}.rrow.st-R{border-left-color:#4f87a6}.rrow.st-P{border-left-color:#e8793f}.rrow.st-T{border-left-color:#9b9790}
+  .rrow select,.gform select{padding:7px 10px;border-radius:10px;border:1px solid #d9d2c4;font-family:inherit;font-size:13px;background:#fff}
+  .gform{display:grid;grid-template-columns:2fr 1fr 1fr 2fr auto;gap:8px;margin-bottom:14px}
+  .gform input{padding:10px;border:1px solid #d9d2c4;border-radius:10px;font-family:inherit;font-size:13px}
+  @media (max-width:720px){ .gform{grid-template-columns:1fr} }
   .hidden{display:none !important}
 </style>
 </head>
 <body>
 
 <header class="hero">
-  <img class="mascot" src="nina-chan.jpg" alt="Nina Chan">
-  <div class="mascot-tag">Nina Chan</div>
   <div class="sun"></div>
   <div class="kicker">Tokio · Hakone · Takayama · Kioto · Miyajima · Osaka</div>
   <h1>Japón,<br><em>día a día</em></h1>
@@ -188,9 +196,9 @@
 
   <section class="cards">
     <div class="card">
-      <span class="pill-red">Primer día</span>
-      <h3 style="margin-top:10px">Sábado 5 de diciembre</h3>
-      <p class="hrs">Aterrizaje en Narita 18:00 → tren a Nakano. Si hay energía: Kabukicho y Godzilla sin rugido.</p>
+      <span class="pill-red" id="fcPill">Sáb 5 dic</span>
+      <h3 id="fcTitle" style="margin-top:10px">Sábado 5 de diciembre</h3>
+      <p class="hrs" id="fcText">Aterrizaje en Narita 18:00 → tren a Nakano</p>
     </div>
     <div class="card">
       <h3>Reservas confirmadas</h3>
@@ -211,6 +219,7 @@
   <nav class="nav">
     <button class="tab on" data-v="dias" onclick="show('dias')">Itinerario</button>
     <button class="tab" data-v="pendientes" onclick="show('pendientes')">Por reservar</button>
+    <button class="tab" data-v="hoteles" onclick="show('hoteles')">Hoteles</button>
     <button class="tab" data-v="reservas" onclick="show('reservas')">Reservas</button>
     <button class="tab" data-v="gastos" onclick="show('gastos')">Gastos</button>
     <a class="tab" href="https://docs.google.com/spreadsheets/d/1KGhURxEkjaJ05N_nlOWbXlZGUh1rLnIZL7snDrX6fkE/edit?usp=sharing" target="_blank" rel="noopener">Abrir hoja de Excel ↗</a>
@@ -231,68 +240,35 @@
     </div>
   </section>
 
+  <section id="v-hoteles" class="hidden">
+    <div class="panel">
+      <h2>Hoteles</h2>
+      <p class="hrs">Precio, fechas, dirección y teléfono de cada alojamiento.</p>
+      <div id="hotelList"></div>
+      <div class="sleep" id="hotelTotal" style="margin-top:14px"></div>
+    </div>
+  </section>
   <section id="v-reservas" class="hidden">
     <div class="panel">
-      <h2>Alojamientos</h2>
-      <table>
-        <tr><th>Alojamiento</th><th>Ciudad</th><th>Fechas</th><th>Precio</th><th>Estado</th></tr>
-        <tr><td>Mi-Hotel Nakano-Shinjuku Direct</td><td>Tokio</td><td>5–12 dic (7 noches)</td><td>478 €</td><td class="ok">Confirmada</td></tr>
-        <tr><td>Sengokuhara Shinanoki Ichinoyu (onsen privado)</td><td>Hakone</td><td>12–13 dic</td><td>206 €</td><td class="ok">Confirmada</td></tr>
-        <tr><td>Oyado Hachibei (ryokan con onsen)</td><td>Takayama</td><td>13–15 dic</td><td>74 €</td><td class="ok">Confirmada</td></tr>
-        <tr><td>Hotel The Point Kyoto Station South</td><td>Kioto</td><td>15–19 dic</td><td>116,24 €</td><td class="ok">Confirmada</td></tr>
-        <tr><td>Sakuraya</td><td>Miyajima</td><td>19–20 dic</td><td>93 €</td><td class="ok">Confirmada</td></tr>
-        <tr><td>Travelodge Honmachi Osaka</td><td>Osaka</td><td>20–24 dic</td><td>194 €</td><td class="ok">Confirmada</td></tr>
-      </table>
-    </div>
-    <div class="panel">
-      <h2>Entradas y actividades</h2>
-      <table>
-        <tr><th>Actividad</th><th>Fecha</th><th>Estado</th></tr>
-        <tr><td>Free tour Shinjuku (Civitatis)</td><td>6 dic</td><td class="ok">Hecho</td></tr>
-        <tr><td>Free tour Ueno (Civitatis)</td><td>7 dic</td><td class="ok">Hecho</td></tr>
-        <tr><td>Kirby Café Tokio</td><td>7 dic</td><td class="ok">Reservado · KT61207181056GD</td></tr>
-        <tr><td>Ghibli Museum</td><td>9 dic</td><td class="ok">Reservado · entrada con hora fija</td></tr>
-        <tr><td>Taller de anillos ENNE</td><td>9 dic</td><td class="ok">Reservado · GYG7VKK3X7A5</td></tr>
-        <tr><td>Capybara Café Harajuku</td><td>11 dic</td><td class="ok">Reservado · NRCVS7</td></tr>
-        <tr><td>Shibuya Sky (franja 16:00–16:30)</td><td>11 dic</td><td class="warn">Por reservar</td></tr>
-        <tr><td>Tour de geishas Gion (Civitatis)</td><td>17 dic</td><td class="ok">Hecho</td></tr>
-        <tr><td>Universal Studios + Express Pass Nintendo World</td><td>22 dic</td><td class="ok">Hecho</td></tr>
-        <tr><td>Bus Nohi Takayama ↔ Shirakawa-go</td><td>14 dic</td><td class="warn">Por reservar · Japan Bus Online</td></tr>
-        <tr><td>Romancecar Shinjuku → Hakone-Yumoto</td><td>12 dic</td><td class="warn">Por reservar · Odakyu</td></tr>
-        <tr><td>Shinkansen Odawara → Nagoya y Wide View Hida</td><td>13 dic</td><td class="warn">Por reservar · SmartEX (Wide View muy limitado)</td></tr>
-        <tr><td>Shinkansen Kioto → Hiroshima y Hiroshima → Osaka</td><td>19–20 dic</td><td class="warn">Por reservar · SmartEX o pase JR</td></tr>
-        <tr><td>Vuelo ZH662 Kansai → Shenzhen</td><td>24 dic</td><td class="ok">Confirmado</td></tr>
-      </table>
+      <h2>Reservas y entradas</h2>
+      <p class="hrs">Marca el estado de cada una con el desplegable.</p>
+      <div id="resList"></div>
     </div>
   </section>
 
   <section id="v-gastos" class="hidden">
     <div class="panel">
-      <h2>Gastos del viaje</h2>
-      <p class="hrs">Importes en euros tal como están en la hoja de Gastos. Revisa el total del hotel Mi-Hotel: en la hoja aparece 494 € y en Reservas 478 €.</p>
-      <table>
-        <tr><th>Concepto</th><th>Pagado por</th><th>Importe</th></tr>
-        <tr><td>Mi-Hotel Nakano-Shinjuku (5–12 dic)</td><td>Javi</td><td>244,00 €</td></tr>
-        <tr><td>Mi-Hotel Nakano-Shinjuku (5–12 dic)</td><td>Nina</td><td>250,00 €</td></tr>
-        <tr><td>Sengokuhara Shinanoki Ichinoyu (12–13 dic)</td><td>Javi</td><td>206,00 €</td></tr>
-        <tr><td>Oyado Hachibei (13–15 dic)</td><td>Nina</td><td>74,00 €</td></tr>
-        <tr><td>Hotel The Point Kyoto Station South (15–19 dic)</td><td>Nina</td><td>116,24 €</td></tr>
-        <tr><td>Sakuraya Miyajima (19–20 dic)</td><td>Javi</td><td>93,00 €</td></tr>
-        <tr><td>Travelodge Honmachi Osaka (20–24 dic)</td><td>Javi</td><td>194,00 €</td></tr>
-        <tr><td>Nintendo World</td><td>Javi</td><td>465,00 €</td></tr>
-        <tr><td>eSIM</td><td>Nina</td><td>44,30 €</td></tr>
-        <tr><td>Seguro de viaje</td><td>Nina</td><td>122,76 €</td></tr>
-        <tr><td>Museo Ghibli</td><td>Javi</td><td>13,00 €</td></tr>
-        <tr><td>Capybara Café</td><td>Nina</td><td>53,00 €</td></tr>
-        <tr><td>Tren Nohi (ida)</td><td>Nina</td><td>33,00 €</td></tr>
-        <tr><td>Tren Nohi (vuelta)</td><td>Javi</td><td>33,00 €</td></tr>
-        <tr><td>Taller de anillos ENNE (9 dic)</td><td>Nina</td><td>31,82 €</td></tr>
-      </table>
-      <div class="sleep" style="margin-top:16px;justify-content:space-around;flex-wrap:wrap">
-        <div><b>Javi</b><br>1.248,00 €</div>
-        <div><b>Nina</b><br>725,12 €</div>
-        <div><b>Total</b><br>1.973,12 €</div>
+      <h2>Gastos</h2>
+      <p class="hrs">Añade cada gasto y quién lo pagó. Abajo se calcula cuánto debe cada uno.</p>
+      <div class="gform">
+        <input id="gConcepto" placeholder="Concepto (ej. cena, tren)">
+        <input id="gImporte" type="number" step="0.01" placeholder="Importe €">
+        <select id="gPagador"><option>Javi</option><option>Nina</option></select>
+        <input id="gNota" placeholder="Nota (opcional)">
+        <button class="doneBtn on" onclick="addGasto()">Añadir</button>
       </div>
+      <div id="gList"></div>
+      <div id="gBalance" class="sleep" style="margin-top:16px;flex-direction:column;align-items:flex-start"></div>
     </div>
   </section>
 
@@ -435,7 +411,7 @@ const DAYS = [
  ['15:30','Vuelta a Kioto','T','1,5','Kintetsu Nara Station','Kintetsu (~¥640)',''],
  ['17:00','Pontocho y río Kamo: cena','I','3','Pontocho Kyoto','','Yakitori, izakaya o wagyu','Pontocho es un callejón de farolillos rojos junto al río Kamo.']
 ]},
-{d:'17 dic', w:'Jue', t:'Kioto', sleep:'Hotel The Point Kyoto Station South', items:[
+{d:'17 dic', w:'Jue', t:'Kioto', img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTso9idhxxMCVTBYzq60E6LwU_4eC-adq1S6udyUT2Dxk4jW6YjxIBDNeeQ&s=10', sleep:'Hotel The Point Kyoto Station South', items:[
  ['08:00','Sanjusangendo','I','1','Sanjusangendo Kyoto','¥600 (08:00–17:00)','1.001 estatuas de Kannon','Sanjusangendo tiene 1.001 estatuas de Kannon, cada una con 40 brazos.'],
  ['09:15','Kiyomizu-dera','I','1,5','Kiyomizu-dera Kyoto','¥400 (06:00–18:00)','Terraza de madera con vistas a Kioto'],
  ['10:45','Higashiyama: Sannenzaka, Ninenzaka y Yasaka','I','1,75','Sannenzaka Kyoto','','Yasaka Pagoda y parque Maruyama'],
@@ -511,9 +487,12 @@ const key = (d,i) => d+'-'+i;
 function esc(s){ return String(s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
 function show(v){
-  ['dias','pendientes','reservas','gastos'].forEach(x => document.getElementById('v-'+x).classList.toggle('hidden', x!==v));
+  ['dias','pendientes','hoteles','reservas','gastos'].forEach(x => document.getElementById('v-'+x).classList.toggle('hidden', x!==v));
   document.querySelectorAll('.nav .tab[data-v]').forEach(b => b.classList.toggle('on', b.dataset.v===v));
   if(v==='pendientes') renderPend();
+  if(v==='hoteles') renderHoteles();
+  if(v==='reservas') renderRes();
+  if(v==='gastos') renderGastos();
   window.scrollTo({top: document.getElementById('v-'+v).offsetTop - 10, behavior:'smooth'});
 }
 
@@ -558,13 +537,14 @@ function renderDay(){
         ${curio?`<div class="curio"><b>💡 Curiosidad:</b> ${esc(curio)}</div>`:''}
         <div class="actions">
           ${mq?`<a class="mapbtn" href="${MAP(mq)}" target="_blank" rel="noopener">📍 Ver en Maps</a>`:''}
+          ${esPlace(it,d)?`<a class="mapbtn" href="${gptUrl(it,d)}" target="_blank" rel="noopener">✨ Cuéntame más</a>`:''}
           <button class="doneBtn ${isDone?'on':''}" onclick="toggleDone(${cur},${i})">${isDone?'✓ Hecho':'Marcar hecho'}</button>
         </div>
       </div>
     </article>`;
   }).join('');
   document.getElementById('dayView').innerHTML = `
-    <div class="dayhead">
+    ${d.img?`<div class="dayimg" style="background-image:url('${d.img}')"></div>`:''}<div class="dayhead">
       <div><h2>${d.w} ${d.d} de diciembre</h2><div class="sub">${esc(d.t)}</div></div>
       <div class="meta"><b>${hoursSum.toFixed(1).replace('.',',')} h</b>${all.length} actividades</div>
     </div>
@@ -573,6 +553,7 @@ function renderDay(){
     <div class="filters"><input class="search" placeholder="Buscar actividad, reserva o nota…" value="${esc(q)}" oninput="setQ(this.value)">${filters}</div>
     <div class="timeline">${items || '<p class="hrs">Nada que mostrar con este filtro.</p>'}</div>`;
   updateStats();
+  updateFirst(d, all);
 }
 
 function setOpt(o){ opt = o; renderDay(); }
@@ -609,6 +590,118 @@ function renderPend(){
     <tr><th>Día</th><th>Hora</th><th>Actividad</th><th>Estado</th><th>Reserva</th><th>Maps</th><th></th></tr>${rows.join('')}</table>`;
 }
 
+
+const NO_PLACE = /Traslado|Cena|Comida|Almuerzo|Vuelo|Check|Tren|Bus|Shuttle|Desayuno|Vuelta|Ruta|Descanso|Tiempo|Taller|Monorrail|Encuentro|Salida|Llegada|Inmigración|Dejar|Shuttle/i;
+function esPlace(it,d){ return !!it[4] && it[2]!=='T' && !NO_PLACE.test(it[1]); }
+function gptUrl(it,d){ return 'https://chatgpt.com/?q=' + encodeURIComponent('Cuéntame más sobre ' + it[4] + ' (Japón): historia, qué ver y curiosidades'); }
+function fmt(n){ return n.toFixed(2).replace('.',',') + ' €'; }
+function updateFirst(d, all){
+  const f = all[0];
+  document.getElementById('fcPill').textContent = d.w + ' ' + d.d;
+  document.getElementById('fcTitle').textContent = d.w + ' ' + d.d + ' de diciembre';
+  document.getElementById('fcText').textContent = f ? f.it[0] + ' · ' + f.it[1] : 'Sin actividades';
+}
+
+const HOTELES = [
+ {n:'Mi-Hotel Nakano-Shinjuku Direct', c:'Tokio', f:'5–12 dic · 7 noches', p:478, e:'Confirmada', dir:'3 Chome-42-5 Nakano, Tokio', tel:'+81 3 5990 7909', q:'Mi-Hotel Nakano Shinjuku Direct Tokyo'},
+ {n:'Sengokuhara Shinanoki Ichinoyu', c:'Hakone', f:'12–13 dic · 1 noche', p:206, e:'Confirmada', dir:'940-2 Sengokuhara, Hakone', tel:'+81 460 85 2244', q:'Sengokuhara Shinanoki Ichinoyu Hakone'},
+ {n:'Oyado Hachibei', c:'Takayama', f:'13–15 dic · 2 noches', p:74, e:'Confirmada', dir:'1 Chome-1-388 Kamiokamotomachi, Takayama', tel:'+81 577 35 2111', q:'Oyado Hachibei Takayama'},
+ {n:'Hotel The Point Kyoto Station South', c:'Kioto', f:'15–19 dic · 4 noches', p:116.24, e:'Confirmada', dir:'30-7 Higashikujō, Minami-ku, Kioto', tel:'+81 75 574 7255', q:'Hotel The Point Kyoto Station South'},
+ {n:'Sakuraya', c:'Miyajima', f:'19–20 dic · 1 noche', p:93, e:'Confirmada', dir:'Miyajima-cho 853-1, Hiroshima', tel:'+81 829 40 2805', q:'Sakuraya Miyajima'},
+ {n:'Travelodge Honmachi Osaka', c:'Osaka', f:'20–24 dic · 4 noches', p:194, e:'Confirmada', dir:'3-2-6 Azuchimachi, Chuo-ku, Osaka', tel:'+81 6-4963-2196', q:'Travelodge Honmachi Osaka'}
+];
+function renderHoteles(){
+  document.getElementById('hotelList').innerHTML = HOTELES.map(h =>
+    `<div class="hcard"><div><b>${esc(h.n)}</b><div class="hrs">${esc(h.c)} · ${esc(h.f)}</div><div class="hrs">${esc(h.dir)} · ${esc(h.tel)}</div></div>
+     <div class="hright"><b>${fmt(h.p)}</b><span class="pill p-L">${esc(h.e)}</span><a class="mapbtn" href="${MAP(h.q)}" target="_blank" rel="noopener">📍 Ver en Maps</a></div></div>`).join('');
+  const total = HOTELES.reduce((s,h)=>s+h.p,0);
+  document.getElementById('hotelTotal').innerHTML = `<b>Total alojamiento:</b>&nbsp;${fmt(total)}`;
+}
+
+const RES_DEF = [
+ {n:'Tour de Shinjuku (free)', f:'6 dic', s:'Hecho', note:'Civitatis, franja 18:30', q:'Tochomae Station Tokyo'},
+ {n:'Kirby Café Tokyo', f:'7 dic', s:'Hecho', note:'Código KT61207181056GD', q:'Kirby Cafe Tokyo Solamachi'},
+ {n:'Free tour Ueno', f:'7 dic', s:'Hecho', note:'10:00 · estación Okachimachi (salida norte)', q:'Okachimachi Station Tokyo'},
+ {n:'Museo Ghibli', f:'9 dic', s:'Hecho', note:'Entrada con hora fija, no reembolsable', q:'Ghibli Museum Mitaka'},
+ {n:'Petit Mura', f:'9 dic', s:'Pendiente', note:'Revisar si se visita', q:'Petit Mura Kichijoji'},
+ {n:'Capybara Café (Nekos)', f:'11 dic', s:'Hecho', note:'ID NRCVS7', q:'Capybara Cafe Takeshita Street Tokyo'},
+ {n:'Shibuya Sky (franja 16:00–16:30)', f:'11 dic', s:'Pendiente', note:'Reservar la franja cuanto antes', q:'Shibuya Sky Tokyo'},
+ {n:'Excursión Shirakawa-go (bus Nohi)', f:'14 dic', s:'Hecho', note:'Asientos limitados en temporada de nieve', q:'Ogimachi Shirakawa-go'},
+ {n:'Free tour Gion (geishas)', f:'17 dic', s:'Hecho', note:'Civitatis, punto de encuentro en Maps', q:'Gion Kyoto'},
+ {n:'Todai-ji (Gran Buda)', f:'16 dic', s:'Se compra allí', note:'Entrada en puerta (¥600)', q:'Todai-ji Nara'},
+ {n:'Museo de la Paz Hiroshima', f:'20 dic', s:'Se compra allí', note:'¥200 en taquilla', q:'Hiroshima Peace Memorial Museum'},
+ {n:'Ropeway Monte Misen (Miyajima)', f:'21 dic', s:'Se compra allí', note:'Opcional, en taquilla', q:'Mount Misen Ropeway Miyajima'},
+ {n:'Hakone Free Pass', f:'12 dic', s:'Se compra allí', note:'Ver web de Civitatis o Odakyu', q:'Hakone-Yumoto Station'},
+ {n:'Universal Studios Japan (entrada)', f:'22 dic', s:'Hecho', note:'Comprada junto con Express Pass', q:'Universal Studios Japan Osaka'},
+ {n:'Express Pass Nintendo World', f:'22 dic', s:'Hecho', note:'Se agota antes en temporada navideña', q:'Universal Studios Japan Osaka'}
+];
+const RES_ESTADOS = ['Pendiente','Reservado','Hecho','Se compra allí'];
+let resEst = {};
+try{ resEst = JSON.parse(localStorage.getItem('japon-res')||'{}'); }catch(e){ resEst = {}; }
+function setRes(i,v){ resEst[i]=v; try{ localStorage.setItem('japon-res', JSON.stringify(resEst)); }catch(e){} renderRes(); }
+function renderRes(){
+  document.getElementById('resList').innerHTML = RES_DEF.map((r,i)=>{
+    const st = resEst[i] || r.s;
+    const cls = st==='Hecho'?'L':st==='Reservado'?'R':st==='Pendiente'?'P':'T';
+    return `<div class="rrow st-${cls}"><div><b>${esc(r.n)}</b><div class="hrs">${esc(r.f)} · ${esc(r.note)}</div></div>
+      <div class="hright"><a class="mapbtn" href="${MAP(r.q)}" target="_blank" rel="noopener">📍 Maps</a>
+      <select onchange="setRes(${i},this.value)">${RES_ESTADOS.map(e=>`<option ${e===st?'selected':''}>${e}</option>`).join('')}</select></div></div>`;
+  }).join('');
+}
+
+const G_KEY = 'japon-gastos-v1';
+const GASTOS_DEF = [
+ {c:'Mi-Hotel Nakano (5–12 dic)', i:244, p:'Javi', n:''},
+ {c:'Mi-Hotel Nakano (5–12 dic)', i:250, p:'Nina', n:''},
+ {c:'Sengokuhara Shinanoki Ichinoyu', i:206, p:'Javi', n:'12–13 dic'},
+ {c:'Oyado Hachibei', i:74, p:'Nina', n:'13–15 dic'},
+ {c:'Hotel The Point Kyoto Station South', i:116.24, p:'Nina', n:'15–19 dic'},
+ {c:'Sakuraya Miyajima', i:93, p:'Javi', n:'19–20 dic'},
+ {c:'Travelodge Honmachi Osaka', i:194, p:'Javi', n:'20–24 dic'},
+ {c:'Nintendo World', i:465, p:'Javi', n:''},
+ {c:'eSIM', i:44.3, p:'Nina', n:''},
+ {c:'Seguro de viaje', i:122.76, p:'Nina', n:''},
+ {c:'Museo Ghibli', i:13, p:'Javi', n:''},
+ {c:'Capybara Café', i:53, p:'Nina', n:''},
+ {c:'Tren Nohi (ida)', i:33, p:'Nina', n:''},
+ {c:'Tren Nohi (vuelta)', i:33, p:'Javi', n:''},
+ {c:'Taller de anillos ENNE', i:31.82, p:'Nina', n:'9 dic'}
+];
+function loadG(){
+  try{ const v = localStorage.getItem(G_KEY); if(v) return JSON.parse(v); }catch(e){}
+  const seed = GASTOS_DEF.map((g,k)=>({id:k+1, c:g.c, i:g.i, p:g.p, n:g.n}));
+  saveG(seed); return seed;
+}
+function saveG(l){ try{ localStorage.setItem(G_KEY, JSON.stringify(l)); }catch(e){} }
+function addGasto(){
+  const c = document.getElementById('gConcepto').value.trim();
+  const i = parseFloat((document.getElementById('gImporte').value||'').replace(',','.'));
+  const p = document.getElementById('gPagador').value;
+  const n = document.getElementById('gNota').value.trim();
+  if(!c || !(i>0)) return;
+  const l = loadG(); l.push({id:Date.now(), c, i, p, n}); saveG(l);
+  ['gConcepto','gImporte','gNota'].forEach(id => document.getElementById(id).value='');
+  renderGastos();
+}
+function delGasto(id){ saveG(loadG().filter(g => g.id!==id)); renderGastos(); }
+function renderGastos(){
+  const l = loadG();
+  const total = l.reduce((s,g)=>s+g.i,0), share = total/2;
+  const paid = {Javi:0, Nina:0};
+  l.forEach(g => { paid[g.p] = (paid[g.p]||0) + g.i; });
+  document.getElementById('gList').innerHTML = `<table><tr><th>Concepto</th><th>Pagó</th><th>Nota</th><th>Importe</th><th></th></tr>` +
+    l.map(g => `<tr><td>${esc(g.c)}</td><td>${esc(g.p)}</td><td class="hrs">${esc(g.n||'')}</td><td>${fmt(g.i)}</td><td><button class="doneBtn" onclick="delGasto(${g.id})">✕</button></td></tr>`).join('') + `</table>`;
+  const diff = paid.Javi - share;
+  const res = Math.abs(diff)<0.01 ? 'Estáis en paz: cada uno ha puesto lo mismo.'
+            : diff>0 ? `Nina debe <b>${fmt(diff)}</b> a Javi.`
+            : `Javi debe <b>${fmt(-diff)}</b> a Nina.`;
+  document.getElementById('gBalance').innerHTML =
+    `<div><b>Total:</b> ${fmt(total)} · cada uno: ${fmt(share)}</div>
+     <div>Javi ha pagado ${fmt(paid.Javi)} · Nina ha pagado ${fmt(paid.Nina)}</div>
+     <div style="margin-top:6px">${res}</div>`;
+}
+
+renderHoteles(); renderRes(); renderGastos();
 renderBar(); renderDay();
 </script>
 
