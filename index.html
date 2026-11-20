@@ -19,7 +19,7 @@
   a{color:inherit}
 
   /* HERO */
-  .hero{position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(27,21,19,.35),rgba(27,21,19,.75)),url('fuji.jpg') center/cover no-repeat;color:#fff;padding:56px 24px 110px;min-height:520px}
+  .hero{position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(27,21,19,.35),rgba(27,21,19,.75)),url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0uzUhFzyR0zeNmCyGRa4mwIW3zbnVhUQJw7oEJV-JjjhEWB1rs8wDBObM&s=10') center/cover no-repeat;color:#fff;padding:56px 24px 110px;min-height:520px}
   .mascot{position:absolute;right:24px;top:24px;width:96px;height:96px;border-radius:50%;border:3px solid #f6d9a2;object-fit:cover;box-shadow:0 8px 24px rgba(0,0,0,.35);z-index:2}
   .mascot-tag{position:absolute;right:24px;top:126px;background:#fff;color:var(--ink);font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px;z-index:2}
   .hero .sun{position:absolute;left:50%;top:44%;width:260px;height:260px;margin-left:-130px;border-radius:50%;background:radial-gradient(circle,#ffe7b3 0%,#f4a57a 55%,transparent 70%);opacity:.9}
@@ -119,6 +119,32 @@
     .item{grid-template-columns:1fr;gap:6px}
     .dayhead h2{font-size:30px}
   }
+
+  /* BARRA DE DATOS */
+  .tripbar{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-radius:18px;box-shadow:0 14px 34px rgba(0,0,0,.18);margin-top:-44px;position:relative;z-index:3;overflow:hidden}
+  .tripbar div{padding:14px 18px;border-right:1px solid #eee}
+  .tripbar div:last-child{border-right:none}
+  .tripbar small{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+  .tripbar b{font-size:15px;color:var(--indigo)}
+  /* TARJETAS INFERIORES */
+  .cards{display:grid;grid-template-columns:1.1fr 1.4fr 1fr;gap:14px;margin-top:18px}
+  .card{background:#fff;border-radius:20px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.06)}
+  .card.dark{background:linear-gradient(160deg,#2a1f1c,#4a2f2a);color:#f6e6cf}
+  .card.dark h3{color:#f6d9a2}
+  .card h3{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:26px;margin:0 0 6px}
+  .pill-red{display:inline-block;background:var(--shu);color:#fff;font-size:11px;font-weight:600;padding:5px 12px;border-radius:999px;letter-spacing:.1em;text-transform:uppercase}
+  .card .line{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.12);font-size:14px}
+  .card .line:last-child{border-bottom:none}
+  @media (max-width:900px){ .cards{grid-template-columns:1fr} .tripbar{grid-template-columns:1fr 1fr} .tripbar div:nth-child(2){border-right:none} }
+  /* NINA CHAN */
+  .nina-fab{position:fixed;right:18px;bottom:18px;width:64px;height:64px;border-radius:50%;border:3px solid #f6d9a2;padding:0;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.35);cursor:pointer;overflow:hidden;z-index:50}
+  .nina-fab img{width:100%;height:100%;object-fit:cover}
+  .wel-bg{position:fixed;inset:0;background:rgba(20,14,12,.6);display:none;align-items:center;justify-content:center;z-index:60;padding:18px}
+  .wel-bg.open{display:flex}
+  .wel{background:var(--cream);border-radius:22px;max-width:420px;width:100%;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+  .wel h3{font-family:'Cormorant Garamond',serif;font-size:28px;margin:0 0 8px;font-weight:500}
+  .wel ul{padding-left:18px;font-size:14px;line-height:1.6}
+  .wel button{margin-top:14px;background:var(--indigo);color:#fff;border:none;padding:10px 18px;border-radius:999px;font-family:inherit;font-weight:600;cursor:pointer}
   .hidden{display:none !important}
 </style>
 </head>
@@ -141,12 +167,45 @@
   </svg>
 </header>
 
+
+  <div class="wrap" style="margin-top:0;padding-top:0">
+    <div class="tripbar">
+      <div><small>Vuelos</small><b>ZH651 · ZH662</b></div>
+      <div><small>Fechas</small><b>5–24 dic 2026</b></div>
+      <div><small>Ciudades</small><b>6 destinos</b></div>
+      <div><small>Alojamientos</small><b>6 en total</b></div>
+    </div>
+  </div>
+
 <main class="wrap">
   <section class="stats">
     <div class="stat"><b>20</b><span>Días</span></div>
     <div class="stat"><b id="stAct">0</b><span>Actividades</span></div>
     <div class="stat"><b>255</b><span>Km a pie</span></div>
     <div class="stat"><b id="stPend">0</b><span>Por reservar</span></div>
+  </section>
+
+
+  <section class="cards">
+    <div class="card">
+      <span class="pill-red">Primer día</span>
+      <h3 style="margin-top:10px">Sábado 5 de diciembre</h3>
+      <p class="hrs">Aterrizaje en Narita 18:00 → tren a Nakano. Si hay energía: Kabukicho y Godzilla sin rugido.</p>
+    </div>
+    <div class="card">
+      <h3>Reservas confirmadas</h3>
+      <div class="line"><span>Hoteles</span><b class="ok">6 de 6</b></div>
+      <div class="line"><span>Vuelos ZH651 · ZH662</span><b class="ok">Confirmados</b></div>
+      <div class="line"><span>Kirby Café · Capybara Café</span><b class="ok">Reservados</b></div>
+      <div class="line"><span>Shibuya Sky</span><b class="warn">Por reservar</b></div>
+    </div>
+    <div class="card dark">
+      <h3>Resumen</h3>
+      <div class="line"><span>Días</span><b>20</b></div>
+      <div class="line"><span>Km a pie</span><b>255</b></div>
+      <div class="line"><span>Por reservar</span><b id="stPend2">0</b></div>
+      <div class="line"><span>Coste en gastos</span><b>1.973,12 €</b></div>
+    </div>
   </section>
 
   <nav class="nav">
@@ -530,6 +589,7 @@ function updateStats(){
   }));
   document.getElementById('stAct').textContent = all;
   document.getElementById('stPend').textContent = pend;
+  document.getElementById('stPend2').textContent = pend;
   const pct = all ? Math.round(dn/all*100) : 0;
   document.getElementById('prog').style.width = pct+'%';
   document.getElementById('progTxt').textContent = `Progreso: ${dn} de ${all} actividades marcadas como hechas (${pct}%).`;
@@ -551,5 +611,21 @@ function renderPend(){
 
 renderBar(); renderDay();
 </script>
+
+<button class="nina-fab" onclick="document.getElementById('welbg').classList.add('open')" aria-label="Ayuda de Nina Chan"><img src="nina-chan.jpg" alt="Nina Chan"></button>
+<div class="wel-bg" id="welbg" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="wel">
+    <h3>Bienvenidos al organizador del viaje</h3>
+    <p class="hrs">¡Hola! Soy Nina Chan y os explico en un minuto qué vais a encontrar aquí.</p>
+    <ul>
+      <li><b>Un día por pestaña:</b> toca cualquier fecha de la barra para ver horarios, hotel, km y enlaces a Maps.</li>
+      <li><b>Colores por estado:</b> verde libre, azul reservado, naranja por reservar, amarillo propuesto y gris traslado.</li>
+      <li><b>Marcar hecho:</b> cada actividad se puede marcar; queda guardado en el navegador.</li>
+      <li><b>Lo que falta reservar:</b> la pestaña "Por reservar" lo reúne todo.</li>
+    </ul>
+    <button onclick="document.getElementById('welbg').classList.remove('open')">Empezar por el día 1</button>
+  </div>
+</div>
+
 </body>
 </html>
