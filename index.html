@@ -92,6 +92,7 @@
   .progress{height:10px;background:#eee;border-radius:999px;overflow:hidden;margin:16px 0 4px}
   .progress div{height:100%;background:linear-gradient(90deg,var(--shu),var(--gold));transition:width .3s}
   .hrs{font-size:12px;color:var(--muted)}
+  .diag{font-size:12px;color:var(--muted);background:#fff;border-radius:12px;padding:8px 12px;margin-top:10px}
 
   .dayTitle{margin:26px 0 4px;font-size:26px;cursor:pointer;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
   .dayTitle small{font-family:'Poppins';font-size:12px;color:var(--shu)}
@@ -106,7 +107,6 @@
   .gform input,.gform select{padding:10px;border:1px solid #d9d2c4;border-radius:10px;font-family:inherit;font-size:13px}
   .sum{background:#fff;border-radius:16px;padding:14px 18px;margin-top:16px;box-shadow:0 2px 10px rgba(0,0,0,.04);font-size:14px}
   .foot{text-align:center;color:var(--muted);font-size:12px;padding:30px 10px 50px}
-  .nina-fab{position:fixed;right:18px;bottom:18px;width:56px;height:56px;border-radius:50%;border:3px solid #f6d9a2;background:#264348;color:#fff;font-size:24px;cursor:pointer;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.35)}
   @media (max-width:900px){.tripbar{grid-template-columns:1fr 1fr}.tripbar div:nth-child(2){border-right:none}}
   @media (max-width:720px){.stats{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2){border-right:none}.item{grid-template-columns:1fr;gap:6px}.gform{grid-template-columns:1fr}.dayhead h2{font-size:30px}#status{margin-left:0;text-align:left}}
 </style>
@@ -208,12 +208,10 @@
   <footer class="foot">Horarios y precios: verificar siempre. Los botones de Maps buscan el nombre de la actividad.</footer>
 </main>
 
-<button class="nina-fab" onclick="alert('Itinerario Japón · pulsa 🔄 para sincronizar con la hoja')" aria-label="Ayuda">✨</button>
-
 <script>
 // ================= CONFIGURACIÓN =================
 const SHEET_ID = '1KGhURxEkjaJ05N_nlOWbXlZGUh1rLnIZL7snDrX6fkE';
-const DAY_TABS = Array.from({length:20}, (_, i) => `${i+5} dic`);
+const DAY_TABS = Array.from({length: 20}, (_, i) => `${i + 5} dic`);
 const ST = {L:'Libre', R:'Reservado', P:'Por reservar', I:'Propuesto', T:'Traslado'};
 const TEMPLE_RE = /templo|santuario|temple|shrine|jinja|jingu|taisha|pagoda|torii|inari|myojin|kannon|sanjusangendo|\btoji\b|shitennoji|isshinji|honganji|daisho|kiyomizu|kofuku|todai|meiji|itsukushima|benzaiten|gotokuji|senso|kinkaku|ginkaku|ryoan|ninna|tenryu|daikaku|otagi|-ji\b|-dera\b|-in\b/;
 const POKE_RE = /pokemon|pikachu/;
@@ -259,6 +257,7 @@ const mapUrl = x => /^https?:\/\//.test(x) ? x : 'https://www.google.com/maps/se
 const fmtH = h => h.toFixed(1).replace('.', ',');
 const fmtE = n => n.toFixed(2).replace('.', ',') + ' €';
 const mins = fr => { const m = String(fr).match(/(\d{1,2})[:.](\d{2})/); return m ? (+m[1]) * 60 + (+m[2]) : 9999; };
+const hasTime = s => /\d{1,2}[:.]\d{2}/.test(s) || /^opc/i.test(String(s).trim());
 
 function estadoCode(t){
   const s = norm(t);
@@ -269,7 +268,6 @@ function estadoCode(t){
   return 'I';
 }
 
-// Categoría: si hay columna Tipo manda; si no, se detecta por el nombre de la actividad
 function catOf(tipo, title, res){
   const tp = norm(tipo);
   if (tp) return (tp.includes('pok') ? 'P' : '') + (tp.includes('templ') ? 'T' : '');
@@ -277,61 +275,80 @@ function catOf(tipo, title, res){
   return (POKE_RE.test(t) ? 'P' : '') + (TEMPLE_RE.test(t) ? 'T' : '');
 }
 
-// ================= LECTURA DE GOOGLE SHEETS =================
-// Usa el endpoint JSON de gviz (compatible con el navegador). Lee el texto visible de cada celda.
+// ================= CSV =================
+function parseCSV(text){
+  const rows = []; let row = [], cell = '', inQ = false;
+  for (let i = 0; i < text.length; i++){
+    const c = text[i];
+    if (inQ){
+      if (c === '"'){ if (text[i + 1] === '"'){ cell += '"'; i++; } else inQ = false; }
+      else cell += c;
+    } else if (c === '"') inQ = true;
+    else if (c === ','){ row.push(cell); cell = ''; }
+    else if (c === '\n' || c === '\r'){
+      if (c === '\r' && text[i + 1] === '\n') i++;
+      row.push(cell); rows.push(row); row = []; cell = '';
+    } else cell += c;
+  }
+  if (cell || row.length){ row.push(cell); rows.push(row); }
+  return rows;
+}
+
+// ================= LECTURA =================
+// Usa el CSV público de cada pestaña (el mismo que descarga "Descargar como CSV").
 async function fetchTab(name){
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(name)}&_=${Date.now()}`;
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(name)}&_=${Date.now()}`;
   const r = await fetch(url, {cache: 'no-store'});
   if (!r.ok) throw new Error(`${name}: HTTP ${r.status}`);
   const txt = await r.text();
-  const m = txt.match(/setResponse\(([\s\S]*)\);?\s*$/);
-  if (!m) throw new Error(`${name}: la hoja no es pública (compártela como "Cualquiera con el enlace")`);
-  const json = JSON.parse(m[1]);
-  if (json.status === 'error') throw new Error(`${name}: ${json.errors?.[0]?.detailed_message || 'no existe esta pestaña'}`);
-  const head = json.table.cols.map(c => c.label || '');
-  const body = json.table.rows.map(r => (r.c || []).map(c => c ? (c.f ?? (c.v == null ? '' : String(c.v))) : ''));
-  return [head, ...body];
+  if (txt.trim().startsWith('<')) throw new Error(`${name}: la hoja no es pública (Compartir → Cualquiera con el enlace → Lector)`);
+  return parseCSV(txt);
 }
 
-function colMap(row){
-  const h = row.map(c => norm(c));
-  const f = (...ks) => h.findIndex(c => ks.some(k => c.startsWith(k)));
-  return { fr: f('franja'), act: f('actividad'), est: f('estado'), hrs: f('horas'),
-           maps: f('google maps', 'maps'), res: f('reserva'), tipo: f('tipo', 'categoria'), opt: f('opcion') };
+// Localiza una columna por nombre en cualquier fila; si no existe, usa la posición habitual.
+function findCols(rows){
+  for (const r of rows.slice(0, 6)){
+    const h = r.map(c => norm(c));
+    if (h.some(c => c === 'franja' || c === 'hora')){
+      const f = (...ks) => h.findIndex(c => ks.some(k => c.startsWith(k)));
+      return { fr: f('franja','hora'), act: f('actividad'), est: f('estado'), hrs: f('horas'),
+               maps: f('google maps','maps'), res: f('reserva'), tipo: f('tipo','categoria'), opt: f('opcion') };
+    }
+  }
+  return {fr:0, act:1, est:2, hrs:3, maps:4, res:5, tipo:-1, opt:-1};
 }
 
-function parseDay(name, mat){
-  const titleRow = mat.find(r => r.some(c => /diciembre/i.test(c))) || [];
-  const head = titleRow.find(c => /diciembre/i.test(c)) || '';
-  const [wd = '', city = ''] = head.split('·').map(s => s.trim());
+function parseDay(name, rows){
+  const titleCell = rows.flat().find(c => /diciembre/i.test(c)) || '';
+  const [wd = '', city = ''] = titleCell.split('·').map(s => s.trim());
   const w = (wd.split(' ')[0] || name).slice(0, 3);
   const n = parseInt(name, 10);
 
-  let sleep = '', H = null;
-  const items = [];
-  for (const r of mat){
-    r.forEach((c, i) => {
-      if (!sleep && norm(c).startsWith('dormimos en')) sleep = (r.slice(i + 1).find(x => String(x).trim()) || '').trim();
-    });
-    if (r.some(c => norm(c) === 'franja')){ H = colMap(r); continue; }
-    if (!H) continue;
-    const g = i => i >= 0 ? String(r[i] ?? '').trim() : '';
-    const fr = g(H.fr), t = g(H.act);
-    if (!t || !(/\d{1,2}[:.]\d{2}/.test(fr) || /^opc/i.test(fr))) continue;
+  let sleep = '';
+  for (const r of rows){
+    const i = r.findIndex(c => norm(c).startsWith('dormimos en'));
+    if (i >= 0){ sleep = (r.slice(i + 1).find(x => String(x).trim()) || '').trim(); break; }
+  }
 
-    const mapsRaw = g(H.maps), res = g(H.res), est = g(H.est);
+  const C = findCols(rows);
+  const g = (r, i) => i >= 0 ? String(r[i] ?? '').trim() : '';
+  const items = [];
+  for (const r of rows){
+    const fr = g(r, C.fr), t = g(r, C.act);
+    if (!t || !hasTime(fr)) continue;
+    const mapsRaw = g(r, C.maps), res = g(r, C.res), est = g(r, C.est);
     items.push({
       key: `${name}|${fr}|${t}`,
       fr, t, s: estadoCode(est),
-      hrs: parseFloat(g(H.hrs).replace(',', '.')) || 0,
+      hrs: parseFloat(g(r, C.hrs).replace(',', '.')) || 0,
       maps: /^https?:\/\//.test(mapsRaw) ? mapsRaw : t,
-      res, opt: g(H.opt).toUpperCase(),
-      cat: catOf(g(H.tipo), t, res),
+      res, opt: g(r, C.opt).toUpperCase(),
+      cat: catOf(g(r, C.tipo), t, res),
       m: mins(fr), dayName: name
     });
   }
   items.sort((a, b) => a.m - b.m);
-  return { name, n, w, city, sleep, items };
+  return { name, n, w, city, sleep, items, rawRows: rows.length };
 }
 
 async function loadAll(){
@@ -419,6 +436,9 @@ function renderDay(){
   const optBar = opts.length ? `<div class="optbar"><span>Elige opción:</span>${opts.map(o =>
     `<button class="chip ${opt === o ? 'all' : ''}" onclick="setOpt('${esc(o)}')">Opción ${esc(o)}</button>`).join('')}</div>` : '';
   const hrsSum = d.items.filter(i => !i.opt || !opts.length || i.opt === opt).reduce((s, i) => s + i.hrs, 0);
+  const diag = d.items.length
+    ? `Actividades leídas: ${d.items.length} (filas en la pestaña: ${d.rawRows})`
+    : `No he encontrado actividades en la pestaña "${d.name}" (filas: ${d.rawRows}). Revisa que cada actividad tenga hora (ej. 09:30) en la primera columna y nombre en la segunda.`;
 
   $('dayView').innerHTML = `
     <div class="dayhead">
@@ -428,6 +448,7 @@ function renderDay(){
     ${d.sleep ? `<div class="sleep">🛏️ <b>Dormimos en:</b> ${esc(d.sleep)}</div>` : ''}
     ${optBar}
     <div class="filters"><input class="search" placeholder="Buscar actividad o reserva…" value="${esc(q)}" oninput="setQ(this.value)">${filters}</div>
+    <div class="diag">${diag}</div>
     <div id="timeline"></div>`;
   renderTimeline();
 }
@@ -456,13 +477,11 @@ function toggleDone(id){
   renderAll();
 }
 
-// Lista por categoría: todos los días, con sus actividades
 function renderGroup(cat, containerId){
   const list = ITEMS.filter(it => it.cat.includes(cat));
-  const total = list.length;
   const daysWith = new Set(list.map(it => it.di)).size;
-  let html = `<p class="hrs"><b>${total}</b> actividades en <b>${daysWith}</b> días.</p>`;
-  if (!total) html += '<p class="hrs">Todavía no hay actividades de este tipo. Si quieres forzarlas, añade la columna Tipo en la hoja.</p>';
+  let html = `<p class="hrs"><b>${list.length}</b> actividades en <b>${daysWith}</b> días.</p>`;
+  if (!list.length) html += '<p class="hrs">Todavía no hay actividades de este tipo.</p>';
   DAYS.forEach((d, di) => {
     const l = list.filter(it => it.di === di);
     if (!l.length) return;
